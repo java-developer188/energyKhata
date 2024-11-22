@@ -15,7 +15,8 @@ class ReadingRepository(private val db : EnergyKhataDatabase) {
     }
 
 
-    fun getReadingByMeterId(meterId: Int){
-        db.readingDao().getReadingByMeterId(meterId)
+
+    suspend fun getReadingByMeterId(meterId: Int) : List<Reading> {
+        return db.readingDao().getReadingByMeterId(meterId)
     }
 }

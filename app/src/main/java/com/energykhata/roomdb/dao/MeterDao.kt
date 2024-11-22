@@ -16,4 +16,7 @@ interface MeterDao {
 
     @Query("SELECT * FROM meters")
     suspend fun getMeters(): List<Meter>
+
+    @Query("SELECT * FROM meters WHERE meter_id = :id")
+    suspend fun getMeter(id : Int): List<Meter>
 }

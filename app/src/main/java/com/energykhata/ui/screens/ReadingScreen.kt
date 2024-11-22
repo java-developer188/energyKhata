@@ -1,6 +1,5 @@
 package com.energykhata.ui.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,27 +27,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.energykhata.R
-import com.energykhata.factory.MainViewModelFactory
+import com.energykhata.factory.ReadingViewModelFactory
 import com.energykhata.roomdb.repositories.MeterRepository
-import com.energykhata.roomdb.repositories.UserRepository
-import com.energykhata.viewmodels.MainViewModel
+import com.energykhata.roomdb.repositories.ReadingRepository
+import com.energykhata.viewmodels.ReadingViewModel
 
 @Composable
-fun MainScreen(
+fun ReadingScreen(
     navController: NavHostController,
+    meterId: Int?,
     meterRepository: MeterRepository,
-    userRepository: UserRepository
+    readingRepository: ReadingRepository
 ) {
-    BackHandler {
-        if (navController.previousBackStackEntry != null) {
-            navController.popBackStack() // Navigate back in the stack
-        }
-    }
-    val viewModel: MainViewModel = viewModel(
-        factory = MainViewModelFactory(meterRepository,userRepository)
+
+    val viewModel: ReadingViewModel = viewModel(
+        factory = ReadingViewModelFactory(meterRepository, readingRepository)
     )
 
-            val meters by viewModel.meters.collectAsState()
+            val readings by viewModel.readings.collectAsState()
 
             Box(modifier = Modifier.fillMaxSize()) {
                 Image(
@@ -89,11 +85,11 @@ fun MainScreen(
                         verticalArrangement = Arrangement.SpaceBetween,
                         userScrollEnabled = true)
                     {
-                        items(meters.size) { i ->
+                        items(readings.size) { i ->
                             ElevatedButton(
                                 modifier = Modifier.fillMaxWidth().padding(20.dp),
-                                onClick = { navController.navigate(Screen.METERSCREEN.route+"/"+(i+1)) }) {
-                                Text("Meter "+(i+1),
+                                onClick = { }) {
+                                Text("Meter "+readings[i].date.toString()+""+readings[i].reading,
                                     style = MaterialTheme.typography.headlineSmall, // Big heading
                                     textAlign = TextAlign.Center // Center the text
                                 )
@@ -104,6 +100,8 @@ fun MainScreen(
 
             }
     LaunchedEffect(Unit) {
-        viewModel.getMeters()
+        if (meterId != null) {
+            viewModel.getReadings(meterId)
+        }
     }
 }

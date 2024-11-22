@@ -1,4 +1,4 @@
-package com.energykhata.customfactory
+package com.energykhata.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

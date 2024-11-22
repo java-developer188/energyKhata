@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.energykhata.roomdb.models.Reading
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReadingDao {
@@ -16,5 +15,5 @@ interface ReadingDao {
     suspend fun deleteReading(reading: Reading): Int
 
     @Query("SELECT * FROM readings WHERE meter_Id = :meterId")
-    fun getReadingByMeterId(meterId: Int): Flow<List<Reading>>
+    suspend fun getReadingByMeterId(meterId: Int): List<Reading>
 }

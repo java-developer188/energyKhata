@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.energykhata.customfactory.ConfigScreenViewModelFactory
+import com.energykhata.factory.ConfigScreenViewModelFactory
 import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.UserRepository
 import com.energykhata.ui.screens.components.CMeter

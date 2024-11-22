@@ -40,10 +40,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.energykhata.roomdb.models.Meter
+import com.energykhata.roomdb.models.Reading
+import com.energykhata.ui.screens.Screen
+import com.energykhata.viewmodels.MeterViewModel
+import java.time.LocalDate
 
 @Composable
-fun ReadingRecorder(meterNumber: Int , meter: Meter) {
+fun ReadingRecorder(
+    navController: NavHostController,
+    viewModel: MeterViewModel,
+    meterNumber: Int,
+    meter: Meter
+) {
     //<a href="https://www.vecteezy.com/free-vector/meter-reading">Meter Reading Vectors by Vecteezy</a>
     var title by remember { mutableStateOf(meter.title ?: "Meter $meterNumber") }
     var previousReading by remember { mutableLongStateOf(meter.previousReading) }
@@ -63,7 +73,7 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
         )
         {
             Text(
-                text = title ,
+                text = title,
                 fontSize = TextUnit(25f, TextUnitType.Sp),
                 fontWeight = FontWeight.Bold
             )
@@ -71,15 +81,14 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         )
         {
             OutlinedTextField(
-                value = if(previousReading==0L) "" else previousReading.toString(),
+                value = if (previousReading == 0L) "" else previousReading.toString(),
                 onValueChange = {
                     try {
-                        previousReading = if(it.isNotEmpty())
+                        previousReading = if (it.isNotEmpty())
                             it.toLong()
                         else
                             0
@@ -97,7 +106,7 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
             )
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(10.dp))
 
             if (isEditing) {
                 Box(
@@ -124,6 +133,8 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
                                 } else {
                                     isEditing = false
                                     //save this reading in database
+                                    meter.previousReading = previousReading
+                                    viewModel.updatePreviousMonthReading(meter)
                                 }
                             }
                     )
@@ -155,12 +166,12 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
-                value = if(currentReading == 0L) "" else currentReading.toString(),
+                value = if (currentReading == 0L) "" else currentReading.toString(),
                 onValueChange = {
                     try {
-                        currentReading = if(it.isNotEmpty()){
+                        currentReading = if (it.isNotEmpty()) {
                             it.toLong()
-                        } else{
+                        } else {
                             0
                         }
                     } catch (e: NumberFormatException) {
@@ -209,8 +220,45 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
             modifier = Modifier.fillMaxWidth()
         )
         {
-            ElevatedButton(onClick = {
-                isEditing = false
+            ElevatedButton(
+                modifier = Modifier.weight(0.8f),
+                onClick = {
+                    viewModel.saveReadingInLogs(Reading(0,meter.meterId,currentReading, LocalDate.now()))
+                }
+            ) {
+                Text("Save Current Reading")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        {
+            ElevatedButton(
+                modifier = Modifier.weight(0.8f),
+                onClick = {
+                    navController.navigate(Screen.READINGSCREEN.route+"/"+meter.meterId)
+                }) {
+                Text("Show History")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Absolute.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        {
+            ElevatedButton(
+                modifier = Modifier.weight(0.9f),
+                onClick = {
+
                 // Update the difference when saving the previous reading
                 if (currentReading < previousReading) {
                     Toast.makeText(
@@ -219,6 +267,12 @@ fun ReadingRecorder(meterNumber: Int , meter: Meter) {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    if(isEditing) {
+                        isEditing = false
+                        //When data is correct then save the
+                        meter.previousReading = previousReading
+                        viewModel.updatePreviousMonthReading(meter)
+                    }
                     unitsConsume = currentReading - previousReading
                 }
             }) {

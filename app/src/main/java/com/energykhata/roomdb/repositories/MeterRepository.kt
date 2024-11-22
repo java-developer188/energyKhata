@@ -18,4 +18,8 @@ class MeterRepository (private  val  db : EnergyKhataDatabase){
     suspend fun getMeters(): List<Meter> {
         return db.meterDao().getMeters()
     }
+
+    suspend fun getMeter(id : Int): List<Meter> {
+        return db.meterDao().getMeter(id)
+    }
 }
