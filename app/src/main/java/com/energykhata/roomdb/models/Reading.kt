@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.time.LocalDate
 
 @Entity(tableName = "readings",
         foreignKeys = [
@@ -26,6 +25,6 @@ data class Reading(
     val reading: Long,
 
     @ColumnInfo(name = "date")
-    var date : LocalDate
+    var date : String
 )
 

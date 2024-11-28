@@ -22,13 +22,26 @@ class MainViewModel(private val meterRepository: MeterRepository, private val us
         viewModelScope.launch {
             var res = meterRepository.getMeters()
             if (res.isEmpty()) {
-                userRepository.insertUser(User(1,"Default",""))
-                for (num in 1..4) {
-                    meterRepository.upsertMeter(Meter(num,1,"Meter $num",0,0.0f,false))
-                }
+                createDefaultUser()
+                meterRepository.upsertMeter(Meter( 1, 1, "Meter 1", 0, 0.0f, false))
                 res = meterRepository.getMeters()
             }
             _meters.value = res
         }
+    }
+
+     fun addMeter() {
+        viewModelScope.launch {
+            val res = meterRepository.getMeters()
+            if (res.isNotEmpty()) {
+                val num = res.size + 1
+                meterRepository.upsertMeter(Meter(num, 1, "Meter $num", 0, 0.0f, false))
+            }
+            _meters.value = meterRepository.getMeters()
+        }
+    }
+
+    private suspend fun createDefaultUser() {
+        userRepository.insertUser(User(1, "Default", ""))
     }
 }

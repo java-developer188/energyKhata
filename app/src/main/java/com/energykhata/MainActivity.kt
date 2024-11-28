@@ -12,7 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Help
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import androidx.room.Room
 import com.energykhata.roomdb.EnergyKhataDatabase
 import com.energykhata.ui.screens.RootNavHost
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             var showDialog by remember { mutableStateOf(false) }
+            val navController = rememberNavController()
             ReadingRecorderTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -65,14 +68,26 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .wrapContentHeight()
                                     .fillMaxWidth()
-                                    .background(Color.Black),
+                                    .background(Color(0xFF2196F3)),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
+                                if (navController.previousBackStackEntry != null) {
+                                    IconButton(
+                                        modifier = Modifier.weight(0.1f),
+                                        onClick = { navController.navigateUp() }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBackIos, // Help icon
+                                            contentDescription = "Back",
+                                            tint = Color.White
+                                        )
+                                    }
+                                }
                                 Text(
                                     modifier = Modifier.weight(0.9f),
                                     text = "Energy Khata",
-                                    textAlign = TextAlign.Center ,
+                                    textAlign = TextAlign.Center,
                                     color = Color.White,
                                     style = MaterialTheme.typography.headlineSmall
                                 )
@@ -81,7 +96,7 @@ class MainActivity : ComponentActivity() {
                                     onClick = { showDialog = true }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Info, // Help icon
+                                        imageVector = Icons.Default.Help, // Help icon
                                         contentDescription = "Help",
                                         tint = Color.White
                                     )

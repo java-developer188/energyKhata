@@ -8,18 +8,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -44,8 +47,9 @@ import androidx.navigation.NavHostController
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.ui.screens.Screen
+import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.viewmodels.MeterViewModel
-import java.time.LocalDate
+import java.util.Calendar
 
 @Composable
 fun ReadingRecorder(
@@ -64,20 +68,44 @@ fun ReadingRecorder(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize(),
     ) {
-        Box(
+
+        Column(
             modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        )
-        {
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 text = title,
-                fontSize = TextUnit(25f, TextUnitType.Sp),
+                style = MaterialTheme.typography.headlineLarge,
+                //fontSize = TextUnit(25f, TextUnitType.Sp),
                 fontWeight = FontWeight.Bold
             )
+            
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        navController.navigate(Screen.READINGSCREEN.route + "/" + meter.meterId)
+                    },
+                horizontalArrangement = Arrangement.End
+            )
+            {
+
+                Icon(
+                    imageVector = Icons.Default.History,
+                    contentDescription = "History",
+                    tint = Color(0XFF00668b),
+                )
+                Text(
+                    modifier = Modifier.padding(5.dp),
+                    style = MaterialTheme.typography.labelSmall,
+                    text = "History"
+                )
+            }
         }
+
+        Spacer(modifier = Modifier.height(35.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -85,6 +113,7 @@ fun ReadingRecorder(
         )
         {
             OutlinedTextField(
+                modifier = Modifier.weight(0.8f),
                 value = if (previousReading == 0L) "" else previousReading.toString(),
                 onValueChange = {
                     try {
@@ -106,16 +135,17 @@ fun ReadingRecorder(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
             )
 
-            Spacer(modifier = Modifier.width(10.dp))
+            //Spacer(modifier = Modifier.width(2.dp))
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(5.dp)
+                    .background(Color(0XFFeff4f9), CircleShape)
+                    .weight(0.1f)
+            ) {
+                if (isEditing) {
 
-            if (isEditing) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .background(Color(0XFFeff4f9), CircleShape)
-                ) {
                     Icon(
                         imageVector = Icons.Default.Done,
                         contentDescription = "Save",
@@ -138,15 +168,7 @@ fun ReadingRecorder(
                                 }
                             }
                     )
-                }
-            } else {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(5.dp)
-                        .background(Color(0XFFeff4f9), CircleShape)
-                ) {
+                } else {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
@@ -162,7 +184,6 @@ fun ReadingRecorder(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
@@ -188,28 +209,6 @@ fun ReadingRecorder(
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
             )
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(50.dp)
-                    .padding(5.dp)
-                    .background(Color(0XFFeff4f9), CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Done,
-                    contentDescription = "Save reading",
-                    tint = Color(0XFF00668b),
-                    modifier = Modifier.clickable {
-                        Toast.makeText(
-                            context,
-                            "Reading Saved",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(25.dp))
@@ -223,7 +222,14 @@ fun ReadingRecorder(
             ElevatedButton(
                 modifier = Modifier.weight(0.8f),
                 onClick = {
-                    viewModel.saveReadingInLogs(Reading(0,meter.meterId,currentReading, LocalDate.now()))
+                    viewModel.saveReadingInLogs(
+                        Reading(
+                            0,
+                            meter.meterId,
+                            currentReading,
+                            Calendar.getInstance().time.toString().split("GMT")[0].trim()
+                        )
+                    )
                 }
             ) {
                 Text("Save Current Reading")
@@ -232,22 +238,8 @@ fun ReadingRecorder(
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        {
-            ElevatedButton(
-                modifier = Modifier.weight(0.8f),
-                onClick = {
-                    navController.navigate(Screen.READINGSCREEN.route+"/"+meter.meterId)
-                }) {
-                Text("Show History")
-            }
-        }
 
-        Spacer(modifier = Modifier.height(25.dp))
+        //Spacer(modifier = Modifier.height(25.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -259,23 +251,23 @@ fun ReadingRecorder(
                 modifier = Modifier.weight(0.9f),
                 onClick = {
 
-                // Update the difference when saving the previous reading
-                if (currentReading < previousReading) {
-                    Toast.makeText(
-                        context,
-                        "Current reading cannot be less than previous reading",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    if(isEditing) {
-                        isEditing = false
-                        //When data is correct then save the
-                        meter.previousReading = previousReading
-                        viewModel.updatePreviousMonthReading(meter)
+                    // Update the difference when saving the previous reading
+                    if (currentReading < previousReading) {
+                        Toast.makeText(
+                            context,
+                            "Current reading cannot be less than previous reading",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        if (isEditing) {
+                            isEditing = false
+                            //When data is correct then save the
+                            meter.previousReading = previousReading
+                            viewModel.updatePreviousMonthReading(meter)
+                        }
+                        unitsConsume = currentReading - previousReading
                     }
-                    unitsConsume = currentReading - previousReading
-                }
-            }) {
+                }) {
                 Text("Calculate Units Consumed")
             }
         }
@@ -310,5 +302,13 @@ fun ReadingRecorder(
                 }
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReadingScreenPreview() {
+    ReadingRecorderTheme {
+
     }
 }
