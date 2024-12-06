@@ -1,4 +1,4 @@
-package com.energykhata.ui.screens.components
+package com.energykhata.ui.screens.configuration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.energykhata.ui.screens.components
+package com.energykhata.ui.screens.calcuation
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -18,10 +18,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,13 +44,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
-import com.energykhata.ui.screens.Screen
 import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.viewmodels.MeterViewModel
 import java.util.Calendar
 
 @Composable
-fun ReadingRecorder(
+fun CalculationComponent(
     navController: NavHostController,
     viewModel: MeterViewModel,
     meterNumber: Int,
@@ -70,43 +67,6 @@ fun ReadingRecorder(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineLarge,
-                //fontSize = TextUnit(25f, TextUnitType.Sp),
-                fontWeight = FontWeight.Bold
-            )
-            
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        navController.navigate(Screen.READINGSCREEN.route + "/" + meter.meterId)
-                    },
-                horizontalArrangement = Arrangement.End
-            )
-            {
-
-                Icon(
-                    imageVector = Icons.Default.History,
-                    contentDescription = "History",
-                    tint = Color(0XFF00668b),
-                )
-                Text(
-                    modifier = Modifier.padding(5.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    text = "History"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(35.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -213,33 +173,30 @@ fun ReadingRecorder(
 
         Spacer(modifier = Modifier.height(25.dp))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        {
-            ElevatedButton(
-                modifier = Modifier.weight(0.8f),
-                onClick = {
-                    viewModel.saveReadingInLogs(
-                        Reading(
-                            0,
-                            meter.meterId,
-                            currentReading,
-                            Calendar.getInstance().time.toString().split("GMT")[0].trim()
-                        )
-                    )
-                }
-            ) {
-                Text("Save Current Reading")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(25.dp))
-
-
-        //Spacer(modifier = Modifier.height(25.dp))
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.Absolute.Center,
+//            modifier = Modifier.fillMaxWidth()
+//        )
+//        {
+//            ElevatedButton(
+//                modifier = Modifier.weight(0.8f),
+//                onClick = {
+//                    viewModel.saveReadingInLogs(
+//                        Reading(
+//                            0,
+//                            meter.meterId,
+//                            currentReading,
+//                            Calendar.getInstance().time.toString().split("GMT")[0].trim()
+//                        )
+//                    )
+//                }
+//            ) {
+//                Text("Save Current Reading")
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.height(25.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -265,6 +222,15 @@ fun ReadingRecorder(
                             meter.previousReading = previousReading
                             viewModel.updatePreviousMonthReading(meter)
                         }
+                        viewModel.saveReadingInLogs(
+                            Reading(
+                                0,
+                                meter.meterId,
+                                currentReading,
+                                Calendar.getInstance().time.toString().split("GMT")[0].trim()
+                            )
+                        )
+
                         unitsConsume = currentReading - previousReading
                     }
                 }) {

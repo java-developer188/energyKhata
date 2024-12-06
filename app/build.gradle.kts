@@ -80,4 +80,5 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation ("com.google.accompanist:accompanist-flowlayout:0.27.0")
 }

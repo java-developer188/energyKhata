@@ -1,4 +1,4 @@
-package com.energykhata.ui.screens
+package com.energykhata.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -10,6 +10,10 @@ import com.energykhata.roomdb.EnergyKhataDatabase
 import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.roomdb.repositories.UserRepository
+import com.energykhata.ui.screens.calcuation.CalculationScreen
+import com.energykhata.ui.screens.help.HelpScreen
+import com.energykhata.ui.screens.history.HistoryScreen
+import com.energykhata.ui.screens.main.MainScreen
 
 @Composable
 fun RootNavHost(db: EnergyKhataDatabase) {
@@ -19,31 +23,40 @@ fun RootNavHost(db: EnergyKhataDatabase) {
         startDestination = Screen.MAIN.route
     ) {
         composable(Screen.MAIN.route) {
-            MainScreen(navController,MeterRepository(db), UserRepository(db))
+            MainScreen(
+                navController,
+                MeterRepository(db),
+                UserRepository(db)
+            )
+        }
+        composable(Screen.HELP.route) {
+            HelpScreen(navController)
         }
         composable(
-            route=Screen.METERSCREEN.route+"/{meterId}",
+            route = Screen.CALCULATION.route + "/{meterId}",
             arguments = listOf(
-                navArgument(name = "meterId"){
-                    type= NavType.IntType
+                navArgument(name = "meterId") {
+                    type = NavType.IntType
                 }
             )
         )
-        {backstackEntry ->
-            MeterScreen(navController, backstackEntry.arguments?.getInt("meterId"),
+        { backstackEntry ->
+            CalculationScreen(
+                navController, backstackEntry.arguments?.getInt("meterId"),
                 MeterRepository(db), ReadingRepository(db)
             )
         }
         composable(
-            route=Screen.READINGSCREEN.route+"/{meterId}",
+            route = Screen.HISTORY.route + "/{meterId}",
             arguments = listOf(
-                navArgument(name = "meterId"){
-                    type= NavType.IntType
+                navArgument(name = "meterId") {
+                    type = NavType.IntType
                 }
             )
         )
-        {backstackEntry ->
-            ReadingScreen(navController, backstackEntry.arguments?.getInt("meterId"),
+        { backstackEntry ->
+            HistoryScreen(
+                navController, backstackEntry.arguments?.getInt("meterId"),
                 MeterRepository(db), ReadingRepository(db)
             )
         }
@@ -52,14 +65,16 @@ fun RootNavHost(db: EnergyKhataDatabase) {
 
 private object Route {
     const val MAIN = "main"
-    const val METER_SCREEN = "meter"
-    const val READING_SCREEN = "reading"
+    const val CALCULATION = "calculation"
+    const val HISTORY = "history"
+    const val HELP = "help"
     const val CONFIG = "config"
 }
 
 sealed class Screen(val route: String) {
     object MAIN : Screen(Route.MAIN)
-    object METERSCREEN : Screen(Route.METER_SCREEN)
-    object READINGSCREEN : Screen(Route.READING_SCREEN)
+    object CALCULATION : Screen(Route.CALCULATION)
+    object HISTORY : Screen(Route.HISTORY)
+    object HELP : Screen(Route.HELP)
     object CONFIG : Screen(Route.CONFIG)
 }

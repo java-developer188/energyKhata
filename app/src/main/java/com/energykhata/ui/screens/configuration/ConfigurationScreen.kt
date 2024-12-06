@@ -1,4 +1,4 @@
-package com.energykhata.ui.screens
+package com.energykhata.ui.screens.configuration
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,8 +28,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.energykhata.factory.ConfigScreenViewModelFactory
 import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.UserRepository
-import com.energykhata.ui.screens.components.CMeter
-import com.energykhata.ui.screens.components.CUser
 import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.viewmodels.ConfigScreenViewModel
 
