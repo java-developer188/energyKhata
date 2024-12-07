@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Help
@@ -32,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -81,15 +83,17 @@ fun MainScreen(
                 Row(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(start = 15.dp,end=15.dp)
+                        .padding(start = 10.dp, end = 10.dp)
                         .fillMaxWidth()
                         .background(Color.Transparent),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Absolute.Right
                 ) {
-                    Spacer(modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(.9f))
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(.9f)
+                    )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
                         onClick = { navController.navigate(Screen.HELP.route) }
@@ -154,7 +158,7 @@ private fun PortraitLayout(
                 textAlign = TextAlign.Center // Center the text
             )
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 //        LazyColumn(
 //            modifier = Modifier
 //                .wrapContentSize()
@@ -180,30 +184,39 @@ private fun PortraitLayout(
         ) {
             MeterGridView(meters = meters, navController = navController)
         }
-        Row(
-            modifier = Modifier
+        if (meters.size < 8) {
+            Row(modifier = Modifier
                 .wrapContentHeight()
                 .fillMaxWidth()
                 .weight(0.1f)
-                .background(Color(0XFF00BCD4))
-                .clickable { viewModel.addMeter() },
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                modifier = Modifier.padding(top = 19.dp),
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add Meter",
-                tint = Color.White
-            )
-            Text(
-                modifier = Modifier.padding(top=15.dp, bottom = 15.dp),
-                text= "Add Meter",
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center,
-                color = Color.White
-            )
+                .clip(RoundedCornerShape(10.dp))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .background(Color(0XFF00BCD4))
+                        .clickable { viewModel.addMeter() },
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(top = 19.dp),
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Meter",
+                        tint = Color.White
+                    )
+                    Text(
+                        modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
+                        text = "Add Meter",
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center,
+                        color = Color.White
+                    )
+                }
+            }
+        } else {
+            Spacer(modifier = Modifier.height(10.dp))
         }
-
 
         Row(
             modifier = Modifier
@@ -218,6 +231,9 @@ private fun PortraitLayout(
 
 @Composable
 fun MeterGridView(meters: List<Meter>, navController: NavHostController) {
+
+    var gridColors =
+        listOf(Color(0XFFFFECB2), Color(0XFFE0E5FF), Color(0XFFE5F3B6), Color(0XFFD9F5F9))
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
@@ -231,7 +247,7 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Green),
+                    .background(gridColors[(index % gridColors.size)]),
                 contentAlignment = Alignment.Center
             ) {
                 MeterGridItem(
