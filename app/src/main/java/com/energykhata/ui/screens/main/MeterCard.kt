@@ -5,10 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,8 +28,9 @@ fun MeterGridItem(
 ) {
     Box(
         modifier = Modifier
-            .wrapContentSize()
-            .clickable { onClick() }
+            .fillMaxSize()
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,7 +40,7 @@ fun MeterGridItem(
                 painter = painterResource(id = R.drawable.card_meter),
                 contentDescription = "Meter Icon",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(75.dp)
                     .clip(CircleShape)
                     .padding(5.dp)
             )
@@ -47,7 +48,7 @@ fun MeterGridItem(
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = meterName,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface
             )
             // Title and Units Consumed
