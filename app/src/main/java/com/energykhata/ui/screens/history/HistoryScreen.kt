@@ -104,7 +104,11 @@ fun HistoryScreen(
                     )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
-                        onClick = {navController.navigate(Screen.MAIN.route )},
+                        onClick = {
+                            navController.navigate(Screen.MAIN.route )
+                            {
+                                popUpTo(Screen.MAIN.route) { inclusive = true } // Clear the back stack
+                            }},
 
                     ) {
                         Icon(

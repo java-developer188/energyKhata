@@ -203,14 +203,14 @@ private fun PortraitLayout(
                         modifier = Modifier.padding(top = 19.dp),
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Meter",
-                        tint = Color.White
+                        tint = Color(0XFFFFF9E6)
                     )
                     Text(
                         modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
                         text = "Add Meter",
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
-                        color = Color.White
+                        color = Color(0XFFFFF9E6)
                     )
                 }
             }
