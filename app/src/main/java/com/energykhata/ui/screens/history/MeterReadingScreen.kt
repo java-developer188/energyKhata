@@ -1,8 +1,10 @@
 package com.energykhata.ui.screens.history
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,14 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,15 +41,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
+import com.energykhata.util.BannerAd
+import com.energykhata.viewmodels.ReadingViewModel
 import java.util.Calendar
 
 @Composable
-fun MeterReadingScreen(meterName: String, readings: List<Reading>, onDeleteReading: (Reading) -> Unit) {
+fun MeterReadingScreen(
+    viewModel: ReadingViewModel,
+    meter: Meter,
+    readings: List<Reading>,
+) {
 
     val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
     val year = Calendar.getInstance().get(Calendar.YEAR)
@@ -58,12 +68,17 @@ fun MeterReadingScreen(meterName: String, readings: List<Reading>, onDeleteReadi
     var readingToDelete by remember { mutableStateOf<Reading?>(null) }
     var showMonthYearPicker by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp)),
         ) {
             MonthPicker(
                 visible = showMonthYearPicker,
@@ -72,6 +87,7 @@ fun MeterReadingScreen(meterName: String, readings: List<Reading>, onDeleteReadi
                 confirmButtonCLicked = { month_, year_ ->
                     selectedMonth = month_
                     selectedYear = year_
+                    viewModel.getReadings(meter.meterId, selectedMonth, selectedYear)
                     showMonthYearPicker = false
                 },
                 cancelClicked = {
@@ -91,7 +107,7 @@ fun MeterReadingScreen(meterName: String, readings: List<Reading>, onDeleteReadi
         Spacer(modifier = Modifier.height(16.dp))
 
         // LazyColumn for displaying readings
-        LazyColumn {
+        LazyColumn (modifier = Modifier.weight(1f)){
             items(readings.size) { index ->
                 MeterReadingCard(
                     reading = readings[index],
@@ -102,72 +118,118 @@ fun MeterReadingScreen(meterName: String, readings: List<Reading>, onDeleteReadi
                 )
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(if (readings.size < 5) 250.dp else if (readings.size < 10) 150.dp else 100.dp)
+                .padding(8.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+               BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+            }
+        }
     }
 
     // Delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Confirm Deletion") },
-            text = { Text("Are you sure you want to delete this reading?") },
-            confirmButton = {
-                Button(onClick = {
-                    readingToDelete?.let { onDeleteReading(it) }
-                    showDeleteDialog = false
-                }) {
-                    Text("Delete")
+            title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Confirm Deletion",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0XFF00BCD4)
+                    )
+                    Icon(
+                        modifier = Modifier.clickable { showDeleteDialog = false },
+                        imageVector = Icons.Default.Cancel,
+                        contentDescription = "Cancel",
+                        tint = Color(0XFF00BCD4)
+
+                    )
                 }
             },
-            dismissButton = {
-                Button(onClick = { showDeleteDialog = false }) {
-                    Text("Cancel")
+            text = { Text("Are you sure you want to delete this reading?") },
+            confirmButton = {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
+                    onClick = {
+                        readingToDelete?.let {
+                            viewModel.deleteReading(it, meter.meterId, selectedMonth, selectedYear)
+                        }
+                        showDeleteDialog = false
+                    }) {
+                    Text(
+                        text = "Delete",
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-            }
+            },
+            dismissButton = {}
         )
     }
 }
 
 @Composable
 fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top= 8.dp, bottom = 8.dp),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.elevatedCardElevation()
+            .padding(top = 8.dp, bottom = 8.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(Color.Transparent)
+            .border(0.2.dp, Color(0XFFB3B2B2), RoundedCornerShape(10.dp)),
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon and Reading Value
-            Icon(
-                imageVector = Icons.Default.Timeline,
-                contentDescription = "Meter Reading",
-                modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "${reading.reading} kWh",
-                style = MaterialTheme.typography.headlineMedium,
-                fontSize = 20.sp,
-                modifier = Modifier.weight(1f)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Date and Time
-            Column {
+            Column(
+                modifier = Modifier
+                    .weight(.8f)
+            ) {
                 Row {
-                    Icon(Icons.Default.Event, contentDescription = "Date")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = reading.date)
+                    Icon(
+                        imageVector = Icons.Default.Timeline,
+                        contentDescription = "Meter Reading",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "${reading.reading}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Date and Time
                 Row {
-                    Icon(Icons.Default.Schedule, contentDescription = "Time")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = reading.date)
+                    Row {
+                        Icon(Icons.Default.Event, contentDescription = "Date")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = reading.date + ", " + reading.year)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Row {
+                        Icon(Icons.Default.Schedule, contentDescription = "Time")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(text = reading.time)
+                    }
                 }
             }
 
@@ -181,6 +243,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 modifier = Modifier
                     .size(32.dp)
                     .clickable { onDeleteClick() }
+                    .weight(.1f)
             )
         }
     }
@@ -191,7 +254,7 @@ fun MonthYearRow(
     month: Int,
     year: Int,
     icon: ImageVector,
-    onClick: () -> Unit // Callback for the click action
+    onClick: () -> Unit, // Callback for the click action
 ) {
     val monthName = getMonthName(month)
 
@@ -200,12 +263,15 @@ fun MonthYearRow(
             .fillMaxWidth()
             .clickable(onClick = onClick) // Make the row clickable
             .background(Color(0XFFE6F8FB))
-            .clip(RoundedCornerShape(5.dp)),
+            .clip(RoundedCornerShape(10.dp))
+            .border(1.dp, Color(0XFF00BCD4), RoundedCornerShape(10.dp)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.weight(0.9f).padding(top = 20.dp, bottom = 20.dp),
+            modifier = Modifier
+                .weight(0.9f)
+                .padding(top = 20.dp, bottom = 20.dp),
             fontFamily = FontFamily.SansSerif,
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
@@ -214,7 +280,9 @@ fun MonthYearRow(
             textAlign = TextAlign.Center
         )
         Icon(
-            modifier = Modifier.weight(0.1f).size(25.dp),
+            modifier = Modifier
+                .weight(0.1f)
+                .size(25.dp),
             imageVector = icon,
             contentDescription = "Month Icon",
             tint = Color(0XFF00BCD4)
@@ -244,14 +312,14 @@ fun getMonthName(month: Int): String {
 @Preview(showBackground = true)
 @Composable
 fun MeterReadingScreenPreview() {
-    val sampleReadings = listOf(
-        Reading(1, 1, 211232, "14:45"),
-        Reading(2, 1, 3232, "09:30"),
-        Reading(3, 1, 43434, "18:00")
-    )
-    MeterReadingScreen(
-        meterName = "Main House",
-        readings = sampleReadings,
-        onDeleteReading = { /* Handle Delete */ }
-    )
+//    val sampleReadings = listOf(
+//        Reading(1, 1, 211232, "14:45","3",11,2024),
+//        Reading(2, 1, 3232, "09:30","2233",10,2023),
+//        Reading(3, 1, 43434, "18:00","223",212,2022)
+//    )
+//    MeterReadingScreen(
+//        meter= Meter(1,1,"Ground Floor",12,2.2f,false),
+//        readings = sampleReadings,
+//        onDeleteReading = { /* Handle Delete */ }
+//    )
 }

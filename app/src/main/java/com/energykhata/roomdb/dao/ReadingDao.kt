@@ -14,6 +14,6 @@ interface ReadingDao {
     @Delete
     suspend fun deleteReading(reading: Reading): Int
 
-    @Query("SELECT * FROM readings WHERE meter_Id = :meterId")
-    suspend fun getReadingByMeterId(meterId: Int): List<Reading>
+    @Query("SELECT * FROM readings WHERE meter_Id = :meterId and month=:month and year=:year order by reading_id desc ")
+    suspend fun getReadingByMeterId(meterId: Int , month : Int, year: Int ): List<Reading>
 }

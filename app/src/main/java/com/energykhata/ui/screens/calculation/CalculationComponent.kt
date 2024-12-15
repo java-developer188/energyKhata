@@ -1,4 +1,4 @@
-package com.energykhata.ui.screens.calcuation
+package com.energykhata.ui.screens.calculation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -262,14 +262,18 @@ fun CalculationComponent(
                                 viewModel.updatePreviousMonthReading(meter)
                             }
                             if (isSaveEnabled) {
+                                var instant = Calendar.getInstance()
+                                var date = instant.time.toString().split("GMT")[0].trim().substringBeforeLast(' ')
+                                var time = instant.time.toString().split("GMT")[0].trim().substringAfterLast(' ')
                                 viewModel.saveReadingInLogs(
                                     Reading(
                                         0,
                                         meter.meterId,
                                         currentReading,
-                                        Calendar.getInstance().time
-                                            .toString()
-                                            .split("GMT")[0].trim()
+                                        date,
+                                        time,
+                                        instant.get(Calendar.MONTH),
+                                        instant.get(Calendar.YEAR)
                                     )
                                 )
                             }

@@ -51,7 +51,7 @@ fun HistoryScreen(
     navController: NavHostController,
     meterId: Int?,
     meterRepository: MeterRepository,
-    readingRepository: ReadingRepository
+    readingRepository: ReadingRepository,
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
@@ -75,29 +75,29 @@ fun HistoryScreen(
                 Row(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(start = 15.dp,end=15.dp)
+                        .padding(10.dp)
                         .fillMaxWidth()
                         .background(Color.Transparent),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    if (navController.previousBackStackEntry != null) {
-                        IconButton(
-                            modifier = Modifier.weight(0.1f),
-                            onClick = { navController.navigateUp() }
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .size(25.dp),
-                                imageVector = Icons.Default.ArrowBackIos, // Help icon
-                                contentDescription = "Back",
-                                tint = Color(0XFF00BCD4)
-                            )
-                        }
+
+                    IconButton(
+                        modifier = Modifier.weight(0.1f),
+                        onClick = { navController.navigateUp() }
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(25.dp),
+                            imageVector = Icons.Default.ArrowBackIos, // Help icon
+                            contentDescription = "Back",
+                            tint = Color(0XFF00BCD4)
+                        )
                     }
+
                     Text(
                         modifier = Modifier.weight(0.9f),
-                        text = if(meters.isNotEmpty()) meters[0].title!! else "",
+                        text = if (meters.isNotEmpty()) meters[0].title!! else "",
                         textAlign = TextAlign.Center,
                         color = Color(0XFF00BCD4),
                         style = MaterialTheme.typography.headlineMedium
@@ -105,12 +105,15 @@ fun HistoryScreen(
                     IconButton(
                         modifier = Modifier.weight(0.1f),
                         onClick = {
-                            navController.navigate(Screen.MAIN.route )
+                            navController.navigate(Screen.MAIN.route)
                             {
-                                popUpTo(Screen.MAIN.route) { inclusive = true } // Clear the back stack
-                            }},
+                                popUpTo(Screen.MAIN.route) {
+                                    inclusive = true
+                                } // Clear the back stack
+                            }
+                        },
 
-                    ) {
+                        ) {
                         Icon(
                             modifier = Modifier
                                 .size(25.dp),
@@ -125,9 +128,13 @@ fun HistoryScreen(
             Box(
                 modifier = Modifier.padding(paddingValues)
             ) {
+                if (meters.isNotEmpty()) {
                     MeterReadingScreen(
-                        meterName = if(meters.isNotEmpty()) meters[0].title!! else " " ,
-                        readings = readings) {}
+                        viewModel = viewModel,
+                        meter = meters[0],
+                        readings = readings
+                    )
+                }
             }
         }
 
@@ -145,7 +152,7 @@ fun HistoryScreen(
 @Composable
 private fun OldReadingScreen(
     meterId: Int?,
-    readings: List<Reading>
+    readings: List<Reading>,
 ) {
     Column(
         modifier = Modifier

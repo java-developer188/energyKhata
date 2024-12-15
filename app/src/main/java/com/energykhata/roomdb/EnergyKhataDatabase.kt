@@ -14,7 +14,7 @@ import com.energykhata.util.Converter
 @Database(entities = [  User::class,
                         Meter::class,
                         Reading::class],
-    version =5 )
+    version =6 )
 @TypeConverters(Converter::class)
 abstract class EnergyKhataDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

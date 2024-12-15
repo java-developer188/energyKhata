@@ -25,6 +25,15 @@ data class Reading(
     val reading: Long,
 
     @ColumnInfo(name = "date")
-    var date : String
+    var date : String,
+
+    @ColumnInfo(name = "time")
+    var time : String,
+
+    @ColumnInfo(name = "month")
+    var month : Int,
+
+    @ColumnInfo(name = "year")
+    var year : Int
 )
 

@@ -225,7 +225,7 @@ fun MonthPicker(
                             year
                         )
                     },
-                    shape = RoundedCornerShape(10),
+                    shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4))
                 ) {
 

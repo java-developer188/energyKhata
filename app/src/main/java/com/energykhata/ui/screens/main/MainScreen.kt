@@ -49,6 +49,7 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.UserRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.util.BannerAd
 import com.energykhata.viewmodels.MainViewModel
 
 
@@ -83,7 +84,7 @@ fun MainScreen(
                 Row(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(start = 10.dp, end = 10.dp)
+                        .padding(10.dp)
                         .fillMaxWidth()
                         .background(Color.Transparent),
                     verticalAlignment = Alignment.CenterVertically,
@@ -131,7 +132,7 @@ private fun PortraitLayout(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -222,9 +223,9 @@ private fun PortraitLayout(
             modifier = Modifier
                 .weight(0.1f)
                 .fillMaxSize()
-                .background(Color.Cyan)
+                .background(Color.Transparent)
         ) {
-            Text(text = "AD Banner")
+            BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
         }
     }
 }

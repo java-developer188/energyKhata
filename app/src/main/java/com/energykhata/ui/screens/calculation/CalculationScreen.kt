@@ -1,13 +1,15 @@
-package com.energykhata.ui.screens.calcuation
+package com.energykhata.ui.screens.calculation
 
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +48,7 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.util.BannerAd
 import com.energykhata.viewmodels.MeterViewModel
 import kotlinx.coroutines.CoroutineScope
 
@@ -54,7 +57,7 @@ fun CalculationScreen(
     navController: NavHostController,
     meterId: Int?,
     meterRepository: MeterRepository,
-    readingRepository: ReadingRepository
+    readingRepository: ReadingRepository,
 ) {
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
@@ -116,7 +119,7 @@ fun CalculationScreen(
                 Row(
                     modifier = Modifier
                         .wrapContentHeight()
-                        .padding(start = 10.dp, end = 10.dp)
+                        .padding(10.dp)
                         .fillMaxWidth()
                         .background(Color.Transparent),
                     verticalAlignment = Alignment.CenterVertically,
@@ -181,25 +184,47 @@ private fun PortraitLayout(
     navController: NavHostController,
     viewModel: MeterViewModel,
     snackbarHostState: SnackbarHostState,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        userScrollEnabled = true
-    )
-    {
-        items(meters.size) { i ->
-            CalculationComponent(
-                navController,
-                viewModel,
-                i,
-                meters[i],
-                snackbarHostState,
-                coroutineScope
-            )
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+                .weight(.6f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            userScrollEnabled = true
+        )
+        {
+            items(meters.size) { i ->
+                CalculationComponent(
+                    navController,
+                    viewModel,
+                    i,
+                    meters[i],
+                    snackbarHostState,
+                    coroutineScope
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .padding(8.dp)
+                .weight(.4f),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+            }
         }
     }
 }

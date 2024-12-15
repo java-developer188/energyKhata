@@ -20,6 +20,10 @@ import androidx.room.Room
 import com.energykhata.roomdb.EnergyKhataDatabase
 import com.energykhata.ui.RootNavHost
 import com.energykhata.ui.theme.ReadingRecorderTheme
+import com.google.android.gms.ads.MobileAds
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +41,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val backgroundScope = CoroutineScope(Dispatchers.IO)
+        backgroundScope.launch {
+            // Initialize the Google Mobile Ads SDK on a background thread.
+            MobileAds.initialize(this@MainActivity) {}
+        }
         setContent {
             var showDialog by remember { mutableStateOf(false) }
             ReadingRecorderTheme {

@@ -10,7 +10,7 @@ import com.energykhata.roomdb.EnergyKhataDatabase
 import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.roomdb.repositories.UserRepository
-import com.energykhata.ui.screens.calcuation.CalculationScreen
+import com.energykhata.ui.screens.calculation.CalculationScreen
 import com.energykhata.ui.screens.help.HelpScreen
 import com.energykhata.ui.screens.history.HistoryScreen
 import com.energykhata.ui.screens.main.MainScreen
