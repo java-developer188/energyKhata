@@ -1,7 +1,6 @@
 package com.energykhata.ui.screens.main
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,20 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.energykhata.R
 
 @Composable
 fun MeterGridItem(
-    meterName: String,
-    onClick: () -> Unit
+    meterName: String
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .clickable { onClick() },
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -44,44 +43,22 @@ fun MeterGridItem(
                     .clip(CircleShape)
                     .padding(5.dp)
             )
-
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = meterName,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                color = Color(0XFF008D9F),
+                fontWeight = FontWeight.Bold
             )
-            // Title and Units Consumed
-//                Column(
-//                    modifier = Modifier.weight(1f) // Take up the remaining space
-//                ) {
-//                    Text(
-//                        text = meterName,
-//                        style = MaterialTheme.typography.labelSmall,
-//                        color = MaterialTheme.colorScheme.onSurface
-//                    )
-//                Text(
-//                    text = "Units Consumed: $unitsConsumed",
-//                    style = MaterialTheme.typography.bodyLarge,
-//                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-//                )
-//                }
-
-            // Arrow Icon on the right
-//                Icon(
-//                    imageVector = Icons.Default.ArrowForward,
-//                    contentDescription = "Go to Details",
-//                    tint = MaterialTheme.colorScheme.primary
-//                )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun MeterCardPreview() {
     MeterGridItem(
-        meterName = "Meter 1",
-        onClick = {}
+        meterName = "Meter 1234567890 1111111111 2222222222"
     )
 }

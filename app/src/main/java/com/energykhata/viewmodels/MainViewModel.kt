@@ -21,27 +21,45 @@ class MainViewModel(private val meterRepository: MeterRepository, private val us
     fun getMeters() {
         viewModelScope.launch {
             var res = meterRepository.getMeters()
-            if (res.isEmpty()) {
-                createDefaultUser()
-                meterRepository.upsertMeter(Meter( 1, 1, "Meter 1", 0, 0.0f, false))
-                res = meterRepository.getMeters()
-            }
+                if (res.isEmpty()) {
+                    createDefaultUser()
+                    meterRepository.upsertMeter(Meter( 1, 1, "Meter 1", 0, 0.0f, false))
+                    res = meterRepository.getMeters()
+                }
             _meters.value = res
         }
     }
 
      fun addMeter() {
         viewModelScope.launch {
-            val res = meterRepository.getMeters()
-            if (res.isNotEmpty()) {
-                val num = res.size + 1
-                meterRepository.upsertMeter(Meter(num, 1, "Meter $num", 0, 0.0f, false))
-            }
+            val users = userRepository.getUsers()
+            if(users.isNotEmpty()){
+                    var maxMeterId = meterRepository.getMeters().mapNotNull { it.meterId }.maxOrNull()
+                    maxMeterId= maxMeterId!!+1
+                    meterRepository.upsertMeter(Meter(maxMeterId, users[0].userId, "Meter $maxMeterId", 0, 0.0f, false))
+                }
+            _meters.value = meterRepository.getMeters()
+        }
+    }
+
+    fun updateMeter(meter: Meter) {
+        viewModelScope.launch {
+            meterRepository.upsertMeter(meter)
+            _meters.value = meterRepository.getMeters()
+        }
+    }
+
+    fun deleteMeter(meter: Meter) {
+        viewModelScope.launch {
+            meterRepository.deleteMeter(meter)
             _meters.value = meterRepository.getMeters()
         }
     }
 
     private suspend fun createDefaultUser() {
-        userRepository.insertUser(User(1, "Default", ""))
+        val userList = userRepository.getUsers()
+        if (userList.isEmpty()) {
+            userRepository.insertUser(User(1, "Default", ""))
+        }
     }
 }

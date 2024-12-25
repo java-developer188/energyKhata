@@ -57,7 +57,7 @@ fun ConfigurationScreen(userRepository: UserRepository, meterRepository: MeterRe
         Spacer(modifier = Modifier.height(16.dp))
 
         ElevatedButton(onClick = {
-            viewModel.addMeter();
+//            viewModel.addMeter();
         }) {
             Text("Add meter")
         }
@@ -88,7 +88,7 @@ fun ConfigurationScreen(userRepository: UserRepository, meterRepository: MeterRe
     }
 
     LaunchedEffect(Unit) {
-        viewModel.getData()
+//        viewModel.getData()
     }
 }
 

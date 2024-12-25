@@ -87,7 +87,7 @@ fun MeterReadingScreen(
                 confirmButtonCLicked = { month_, year_ ->
                     selectedMonth = month_
                     selectedYear = year_
-                    viewModel.getReadings(meter.meterId, selectedMonth, selectedYear)
+                    viewModel.getReadings(meter.meterId!!, selectedMonth, selectedYear)
                     showMonthYearPicker = false
                 },
                 cancelClicked = {
@@ -130,7 +130,9 @@ fun MeterReadingScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-               BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+                // This commented Ad Unit ID is google testing code
+                // BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+                BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
             }
         }
     }
@@ -167,7 +169,7 @@ fun MeterReadingScreen(
                     colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
                     onClick = {
                         readingToDelete?.let {
-                            viewModel.deleteReading(it, meter.meterId, selectedMonth, selectedYear)
+                            viewModel.deleteReading(it, meter.meterId!!, selectedMonth, selectedYear)
                         }
                         showDeleteDialog = false
                     }) {
@@ -192,7 +194,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
             .padding(top = 8.dp, bottom = 8.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(Color.Transparent)
-            .border(0.2.dp, Color(0XFFB3B2B2), RoundedCornerShape(10.dp)),
+            .border(0.2.dp, Color(0XFFB3B2B2), RoundedCornerShape(10.dp))
     ) {
         Row(
             modifier = Modifier.padding(10.dp),
@@ -212,7 +214,8 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                     Text(
                         text = "${reading.reading}",
                         style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0XFF6B6B6B)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -222,13 +225,19 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                     Row {
                         Icon(Icons.Default.Event, contentDescription = "Date")
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = reading.date + ", " + reading.year)
+                        Text(
+                            text = reading.date + ", " + reading.year,
+                            color = Color(0XFFB3B2B2)
+                        )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Row {
                         Icon(Icons.Default.Schedule, contentDescription = "Time")
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(text = reading.time)
+                        Text(
+                            text = reading.time,
+                            color = Color(0XFFB3B2B2)
+                        )
                     }
                 }
             }
@@ -239,7 +248,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete Reading",
-                tint = Color.Red,
+                tint = Color(0XFFDC3545),
                 modifier = Modifier
                     .size(32.dp)
                     .clickable { onDeleteClick() }
@@ -265,23 +274,23 @@ fun MonthYearRow(
             .background(Color(0XFFE6F8FB))
             .clip(RoundedCornerShape(10.dp))
             .border(1.dp, Color(0XFF00BCD4), RoundedCornerShape(10.dp)),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier
-                .weight(0.9f)
-                .padding(top = 20.dp, bottom = 20.dp),
+                //.weight(0.9f)
+                .padding(top = 10.dp, bottom = 10.dp),
             fontFamily = FontFamily.SansSerif,
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
             color = Color(0XFF00BCD4),
-            fontSize = 25.sp,
             textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.width(8.dp))
         Icon(
             modifier = Modifier
-                .weight(0.1f)
+                //.weight(0.1f)
                 .size(25.dp),
             imageVector = icon,
             contentDescription = "Month Icon",

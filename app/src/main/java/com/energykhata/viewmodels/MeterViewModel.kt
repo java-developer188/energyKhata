@@ -17,7 +17,7 @@ class MeterViewModel(private val meterRepository: MeterRepository , private val 
 
     // Exposed as a read-only StateFlow
     val meters: StateFlow<List<Meter>> = _meters
-    fun getMeter(id : Int) {
+    fun getMeter(id : Long) {
         viewModelScope.launch {
             val res = meterRepository.getMeter(id)
             _meters.value = res
@@ -26,7 +26,7 @@ class MeterViewModel(private val meterRepository: MeterRepository , private val 
 
     fun updatePreviousMonthReading(meter: Meter){
         viewModelScope.launch {
-            val res = meterRepository.upsertMeter(meter)
+             meterRepository.upsertMeter(meter)
         }
     }
 

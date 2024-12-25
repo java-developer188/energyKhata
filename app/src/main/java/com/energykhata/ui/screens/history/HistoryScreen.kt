@@ -49,7 +49,7 @@ import com.energykhata.viewmodels.ReadingViewModel
 @Composable
 fun HistoryScreen(
     navController: NavHostController,
-    meterId: Int?,
+    meterId: Long?,
     meterRepository: MeterRepository,
     readingRepository: ReadingRepository,
 ) {

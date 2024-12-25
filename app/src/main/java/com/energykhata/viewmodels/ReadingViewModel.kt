@@ -26,27 +26,27 @@ class ReadingViewModel(private val meterRepository: MeterRepository, private val
     // Exposed as a read-only StateFlow
     val meters: StateFlow<List<Meter>> = _meters
 
-    fun getReadings(meterId : Int) {
+    fun getReadings(meterId : Long) {
         viewModelScope.launch {
             val res = readingRepository.getReadingByMeterId(meterId,Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR))
             _readings.value = res
         }
     }
-    fun getReadings(meterId : Int , month : Int , year : Int) {
+    fun getReadings(meterId : Long , month : Int , year : Int) {
         viewModelScope.launch {
             val res = readingRepository.getReadingByMeterId(meterId,month,year)
             _readings.value = res
         }
     }
 
-    fun getMeter(meterId : Int) {
+    fun getMeter(meterId : Long) {
         viewModelScope.launch {
             val res = meterRepository.getMeter(meterId)
             _meters.value = res
         }
     }
 
-    fun deleteReading(reading : Reading,meterId : Int , month : Int , year : Int) {
+    fun deleteReading(reading : Reading,meterId : Long , month : Int , year : Int) {
         viewModelScope.launch {
             readingRepository.deleteReading(reading)
             val res = readingRepository.getReadingByMeterId(meterId,month,year)

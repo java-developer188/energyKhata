@@ -16,10 +16,10 @@ import androidx.room.PrimaryKey
 data class Meter(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "meter_id")
-    var meterId: Int = 0,
+    var meterId: Long? ,
 
     @ColumnInfo(name = "user_id")
-    var userId: Int = 0,
+    var userId: Long? ,
 
     @ColumnInfo(name = "title")
     @Nullable

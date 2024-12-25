@@ -3,6 +3,7 @@ package com.energykhata.ui.screens.calculation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,8 +21,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -36,7 +35,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -52,23 +50,17 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.viewmodels.MeterViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
 fun CalculationComponent(
-    navController: NavHostController,
     viewModel: MeterViewModel,
     meterNumber: Int,
     meter: Meter,
-    snackbarHostState: SnackbarHostState,
-    coroutineScope: CoroutineScope
 ) {
     //<a href="https://www.vecteezy.com/free-vector/meter-reading">Meter Reading Vectors by Vecteezy</a>
     var title by remember { mutableStateOf(meter.title ?: "Meter $meterNumber") }
@@ -79,7 +71,8 @@ fun CalculationComponent(
     val focusRequester = remember { FocusRequester() }
     var isSaveEnabled by remember { mutableStateOf(true) }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
+    var previousReadingError by remember { mutableStateOf(false) }
+    var currentReadingError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -109,50 +102,55 @@ fun CalculationComponent(
                         }
                     else
                         0
-                } catch (e: NumberFormatException) {
-
+                } catch (_: NumberFormatException) {}
+                if (previousReadingError) {
+                    if (previousReading == 0L) previousReadingError = false
+                    else if (previousReading < currentReading) {
+                        previousReadingError = false
+                        currentReadingError = false
+                    }
                 }
             },
             enabled = isEditing,
             label = { Text("Previous Month Reading") },
             singleLine = true,
+            isError = previousReadingError,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             trailingIcon = {
                 if (isEditing) {
-
                     Icon(
                         imageVector = Icons.Default.Done,
                         contentDescription = "Save",
                         tint = Color(0XFF28A745),
                         modifier = Modifier
-                            .clickable {
-                                keyboardController?.hide()
-                                if (currentReading != 0L && previousReading > currentReading) {
-                                    coroutineScope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Oops! The previous reading cannot be greater than the current reading",
-                                            duration = SnackbarDuration.Long
-                                        )
+                            .clickable(indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = {
+                                    keyboardController?.hide()
+                                    if (currentReading != 0L && previousReading > currentReading) {
+                                        previousReadingError = true
+                                    } else {
+                                        isEditing = false
+                                        previousReadingError = false
+                                        currentReadingError = false
+                                        //save this reading in database
+                                        meter.previousReading = previousReading
+                                        viewModel.updatePreviousMonthReading(meter)
                                     }
-                                } else {
-                                    isEditing = false
-                                    //save this reading in database
-                                    meter.previousReading = previousReading
-                                    viewModel.updatePreviousMonthReading(meter)
                                 }
-                            }
-                    )
+                            ))
                 } else {
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit",
                         tint = Color(0XFF00BCD4),
                         modifier = Modifier
-                            .clickable {
-                                focusRequester.requestFocus()
-                                isEditing = true
-                            }
-                    )
+                            .clickable(indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = {
+                                    isEditing = true
+                                }
+                            ))
                 }
             },
             colors = TextFieldDefaults.colors(
@@ -171,9 +169,23 @@ fun CalculationComponent(
                 unfocusedLabelColor = Color(0XFFB3B2B2),
                 unfocusedIndicatorColor = Color(0XFFBBBABA),
                 unfocusedContainerColor = Color.Transparent,
+
+                errorPlaceholderColor = Color(0XFFDC3545),
+                errorIndicatorColor = Color(0XFFDC3545),
             )
         )
-
+        if (previousReadingError) {
+            Text(
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(top = 10.dp),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Normal,
+                text = "The previous reading cannot be greater than the current reading",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0XFFDC3545)
+            )
+        }
         Spacer(modifier = Modifier.height(25.dp))
 
         OutlinedTextField(
@@ -196,14 +208,18 @@ fun CalculationComponent(
                     } else {
                         0
                     }
-                } catch (e: NumberFormatException) {
-
+                } catch (_: NumberFormatException) {}
+                if (currentReadingError) {
+                    if (currentReading == 0L) currentReadingError = false
+                    else if (currentReading > previousReading){
+                        previousReadingError = false
+                        currentReadingError = false
+                    }
                 }
-
             },
             label = { Text("Current Reading") },
             singleLine = true,
-
+            isError = currentReadingError,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             colors = TextFieldDefaults.colors(
                 cursorColor = Color(0XFF00BCD4),
@@ -221,8 +237,23 @@ fun CalculationComponent(
                 unfocusedLabelColor = Color(0XFFB3B2B2),
                 unfocusedIndicatorColor = Color(0XFFBBBABA),
                 unfocusedContainerColor = Color.Transparent,
+
+                errorPlaceholderColor = Color(0XFFDC3545),
+                errorIndicatorColor = Color(0XFFDC3545),
             )
         )
+        if (currentReadingError) {
+            Text(
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(top = 10.dp),
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Normal,
+                text = "The current reading must be greater than the previous reading",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0XFFDC3545)
+            )
+        }
 
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -243,18 +274,19 @@ fun CalculationComponent(
                 modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth()
-                    .background(Color(0XFF00BCD4))
-                    .clickable {
+                    .background(
+                        if (previousReading > 0 && currentReading > 0) Color(0XFF00BCD4) else Color(
+                            0XFFB3B2B2
+                        )
+                    )
+                    .clickable(enabled = previousReading > 0 && currentReading > 0) {
                         keyboardController?.hide()
                         // Update the difference when saving the previous reading
                         if (currentReading < previousReading) {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar(
-                                    message = "Oops! The current reading must be greater than the previous reading",
-                                    duration = SnackbarDuration.Long
-                                )
-                            }
+                            currentReadingError = true
                         } else {
+                            previousReadingError = false
+                            currentReadingError = false
                             if (isEditing) {
                                 isEditing = false
                                 //When data is correct then save the
@@ -262,22 +294,31 @@ fun CalculationComponent(
                                 viewModel.updatePreviousMonthReading(meter)
                             }
                             if (isSaveEnabled) {
-                                var instant = Calendar.getInstance()
-                                var date = instant.time.toString().split("GMT")[0].trim().substringBeforeLast(' ')
-                                var time = instant.time.toString().split("GMT")[0].trim().substringAfterLast(' ')
-                                viewModel.saveReadingInLogs(
-                                    Reading(
-                                        0,
-                                        meter.meterId,
-                                        currentReading,
-                                        date,
-                                        time,
-                                        instant.get(Calendar.MONTH),
-                                        instant.get(Calendar.YEAR)
+                                if (currentReading > 0) {
+                                    val instant = Calendar.getInstance()
+                                    val date = instant.time
+                                        .toString()
+                                        .split("GMT")[0]
+                                        .trim()
+                                        .substringBeforeLast(' ')
+                                    val time = instant.time
+                                        .toString()
+                                        .split("GMT")[0]
+                                        .trim()
+                                        .substringAfterLast(' ')
+                                    viewModel.saveReadingInLogs(
+                                        Reading(
+                                            null,
+                                            meter.meterId,
+                                            currentReading,
+                                            date,
+                                            time,
+                                            instant.get(Calendar.MONTH),
+                                            instant.get(Calendar.YEAR)
+                                        )
                                     )
-                                )
+                                }
                             }
-
                             unitsConsume = currentReading - previousReading
                         }
 

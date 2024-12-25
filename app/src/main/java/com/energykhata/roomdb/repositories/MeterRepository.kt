@@ -5,13 +5,13 @@ import com.energykhata.roomdb.models.Meter
 
 class MeterRepository (private  val  db : EnergyKhataDatabase){
 
-    suspend fun upsertMeter(meter: Meter) {
-        db.meterDao().upsertMeter(meter)
+    suspend fun upsertMeter(meter: Meter):Long {
+       return db.meterDao().upsertMeter(meter)
     }
 
 
     suspend fun deleteMeter(meter: Meter) {
-        db.meterDao().deleteMeter(meter)
+         db.meterDao().deleteMeter(meter)
     }
 
 
@@ -19,7 +19,7 @@ class MeterRepository (private  val  db : EnergyKhataDatabase){
         return db.meterDao().getMeters()
     }
 
-    suspend fun getMeter(id : Int): List<Meter> {
+    suspend fun getMeter(id : Long): List<Meter> {
         return db.meterDao().getMeter(id)
     }
 }

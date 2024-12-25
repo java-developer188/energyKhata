@@ -3,6 +3,7 @@ package com.energykhata.roomdb.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "readings",
@@ -12,17 +13,18 @@ import androidx.room.PrimaryKey
             parentColumns = arrayOf("meter_id"),
             childColumns = arrayOf("meter_id"),
             onDelete = ForeignKey.CASCADE
-        )])
+        )],
+    indices = [Index(value = ["reading"], unique = true)])
 data class Reading(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "reading_id")
-    val readingId: Int = 0,
+    var readingId: Long?,
 
     @ColumnInfo(name = "meter_id")
-    val meterId: Int,
+    var meterId: Long?,
 
     @ColumnInfo(name = "reading")
-    val reading: Long,
+    var reading: Long,
 
     @ColumnInfo(name = "date")
     var date : String,

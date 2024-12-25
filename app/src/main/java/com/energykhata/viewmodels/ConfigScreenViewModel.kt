@@ -25,21 +25,21 @@ class ConfigScreenViewModel (private val userRepository: UserRepository , privat
     val meters: StateFlow<List<Meter>> = _meters
 
 
-    fun getData() {
-        viewModelScope.launch {
-            val userRes = userRepository.getUsers()
-            _users.value = userRes
-        if (_users.value.isEmpty()) {
-            _users.value += User()
-        }
-            val meterRes = meterRepository.getMeters()
-            _meters.value = meterRes
-        }
-    }
+//    fun getData() {
+//        viewModelScope.launch {
+//            val userRes = userRepository.getUsers()
+//            _users.value = userRes
+//        if (_users.value.isEmpty()) {
+//            _users.value += User()
+//        }
+//            val meterRes = meterRepository.getMeters()
+//            _meters.value = meterRes
+//        }
+//    }
 
-    fun addMeter() {
-       _meters.value+=Meter()
-    }
+//    fun addMeter() {
+//       _meters.value+=Meter()
+//    }
 
     fun deleteMeter() {
         _meters.value.dropLast(1)

@@ -55,7 +55,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun CalculationScreen(
     navController: NavHostController,
-    meterId: Int?,
+    meterId: Long?,
     meterRepository: MeterRepository,
     readingRepository: ReadingRepository,
 ) {
@@ -201,12 +201,9 @@ private fun PortraitLayout(
         {
             items(meters.size) { i ->
                 CalculationComponent(
-                    navController,
                     viewModel,
                     i,
-                    meters[i],
-                    snackbarHostState,
-                    coroutineScope
+                    meters[i]
                 )
             }
         }
@@ -223,7 +220,9 @@ private fun PortraitLayout(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+                // This commented Ad Unit ID is google testing code
+                // BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
+                BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
             }
         }
     }

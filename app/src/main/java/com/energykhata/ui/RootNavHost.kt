@@ -42,13 +42,13 @@ fun RootNavHost(db: EnergyKhataDatabase) {
             route = Screen.CALCULATION.route + "/{meterId}",
             arguments = listOf(
                 navArgument(name = "meterId") {
-                    type = NavType.IntType
+                    type = NavType.LongType
                 }
             )
         )
         { backstackEntry ->
             CalculationScreen(
-                navController, backstackEntry.arguments?.getInt("meterId"),
+                navController, backstackEntry.arguments?.getLong("meterId"),
                 MeterRepository(db), ReadingRepository(db)
             )
         }
@@ -56,13 +56,13 @@ fun RootNavHost(db: EnergyKhataDatabase) {
             route = Screen.HISTORY.route + "/{meterId}",
             arguments = listOf(
                 navArgument(name = "meterId") {
-                    type = NavType.IntType
+                    type = NavType.LongType
                 }
             )
         )
         { backstackEntry ->
             HistoryScreen(
-                navController, backstackEntry.arguments?.getInt("meterId"),
+                navController, backstackEntry.arguments?.getLong("meterId"),
                 MeterRepository(db), ReadingRepository(db)
             )
         }
