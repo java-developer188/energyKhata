@@ -102,14 +102,15 @@ fun CalculationComponent(
                         }
                     else
                         0
-                } catch (_: NumberFormatException) {}
-                if (previousReadingError) {
-                    if (previousReading == 0L) previousReadingError = false
-                    else if (previousReading < currentReading) {
-                        previousReadingError = false
-                        currentReadingError = false
-                    }
+                } catch (_: NumberFormatException) {
                 }
+
+                if (previousReading == 0L) previousReadingError = false
+                else if (previousReading < currentReading) {
+                    previousReadingError = false
+                    currentReadingError = false
+                }
+
             },
             enabled = isEditing,
             label = { Text("Previous Month Reading") },
@@ -158,7 +159,7 @@ fun CalculationComponent(
                 focusedIndicatorColor = Color(0XFFFFC107),
                 focusedTextColor = Color(0XFF00BCD4),
                 focusedLabelColor = Color(0XFF00BCD4),
-                focusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.White,
 
                 disabledContainerColor = Color(0XFFE9E9E9),
                 disabledTextColor = Color(0XFFB3B2B2),
@@ -168,7 +169,7 @@ fun CalculationComponent(
                 unfocusedTextColor = Color(0XFFB3B2B2),
                 unfocusedLabelColor = Color(0XFFB3B2B2),
                 unfocusedIndicatorColor = Color(0XFFBBBABA),
-                unfocusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.White,
 
                 errorPlaceholderColor = Color(0XFFDC3545),
                 errorIndicatorColor = Color(0XFFDC3545),
@@ -208,14 +209,15 @@ fun CalculationComponent(
                     } else {
                         0
                     }
-                } catch (_: NumberFormatException) {}
-                if (currentReadingError) {
-                    if (currentReading == 0L) currentReadingError = false
-                    else if (currentReading > previousReading){
-                        previousReadingError = false
-                        currentReadingError = false
-                    }
+                } catch (_: NumberFormatException) {
                 }
+
+                if (currentReading == 0L) currentReadingError = false
+                else if (currentReading > previousReading) {
+                    previousReadingError = false
+                    currentReadingError = false
+                }
+
             },
             label = { Text("Current Reading") },
             singleLine = true,
@@ -226,7 +228,7 @@ fun CalculationComponent(
                 focusedIndicatorColor = Color(0XFFFFC107),
                 focusedTextColor = Color(0XFF00BCD4),
                 focusedLabelColor = Color(0XFF00BCD4),
-                focusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.White,
 
                 disabledContainerColor = Color(0XFFE9E9E9),
                 disabledTextColor = Color(0XFFB3B2B2),
@@ -236,7 +238,7 @@ fun CalculationComponent(
                 unfocusedTextColor = Color(0XFFB3B2B2),
                 unfocusedLabelColor = Color(0XFFB3B2B2),
                 unfocusedIndicatorColor = Color(0XFFBBBABA),
-                unfocusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.White,
 
                 errorPlaceholderColor = Color(0XFFDC3545),
                 errorIndicatorColor = Color(0XFFDC3545),

@@ -2,8 +2,8 @@ package com.energykhata.ui.screens.main
 
 import android.content.pm.ActivityInfo
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -46,13 +45,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.energykhata.R
 import com.energykhata.factory.MainViewModelFactory
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.repositories.MeterRepository
@@ -69,7 +71,6 @@ import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
 import com.energykhata.util.BannerAd
 import com.energykhata.viewmodels.MainViewModel
-import kotlinx.coroutines.launch
 
 
 @Composable
@@ -100,14 +101,14 @@ fun MainScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-//        Image(
-//            painter = painterResource(id = R.drawable.bglite),
-//            contentDescription = null,
-//            contentScale = ContentScale.Fit,
-//            modifier = Modifier.fillMaxSize(),
-//            alpha = 0.6f
-//        )
+        Image(
+            painter = painterResource(id = R.drawable.bgpattern),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxSize(),
+        )
         Scaffold(
+            containerColor = Color.Transparent,
             topBar = {
                 Row(
                     modifier = Modifier
@@ -169,14 +170,14 @@ private fun PortraitLayout(
     meters: List<Meter>,
     navController: NavHostController,
     viewModel: MainViewModel,
-    onDeleteMeter: (Meter?) -> Unit
+    onDeleteMeter: (Meter?) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.Top
     ) {
         Column(
             modifier = Modifier
@@ -184,15 +185,6 @@ private fun PortraitLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-//            Text(
-//                text = "Energy Khata",
-//                fontFamily = FontFamily.SansSerif,
-//                fontWeight = FontWeight.ExtraBold,
-//                color = Color(0XFF00BCD4),
-//                style = MaterialTheme.typography.headlineLarge, // Big heading
-//                textAlign = TextAlign.Center // Center the text
-//            )
-            Spacer(modifier = Modifier.height(8.dp)) // Add space between heading and text
             Text(
                 fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Normal,
@@ -201,13 +193,18 @@ private fun PortraitLayout(
                 textAlign = TextAlign.Left // Center the text
             )
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(1.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.5f)
         ) {
-            MeterGridView(meters = meters, navController = navController, viewModel = viewModel,onDeleteMeter)
+            MeterGridView(
+                meters = meters,
+                navController = navController,
+                viewModel = viewModel,
+                onDeleteMeter
+            )
         }
         if (meters.size < 8) {
             Row(
@@ -258,28 +255,33 @@ private fun PortraitLayout(
 }
 
 @Composable
-fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewModel: MainViewModel,onDeleteMeter:(Meter?)->Unit) {
+fun MeterGridView(
+    meters: List<Meter>,
+    navController: NavHostController,
+    viewModel: MainViewModel,
+    onDeleteMeter: (Meter?) -> Unit,
+) {
 
     var gridColors =
-        listOf(Color(0XFFFFECB2), Color(0XFFE0E5FF), Color(0XFFE5F3B6), Color(0XFFD9F5F9))
+        listOf(
+            Brush.verticalGradient(colors = listOf(Color(0xFF627AF2), Color(0xFFC8D1FF))),
+            Brush.verticalGradient(colors = listOf(Color(0xFFE2D236), Color(0xFFFFF8B5))),
+            Brush.verticalGradient(colors = listOf(Color(0xFFBCE82C), Color(0xFFE5F3B6))),
+            Brush.verticalGradient(colors = listOf(Color(0xFF52B8C6), Color(0xFFBCF7FF)))
+        )
+    val deleteIconColorList =
+        listOf(Color(0xFF627AF2), Color(0xFFE2D236), Color(0xFFBCE82C), Color(0xFF52B8C6))
     var meterSelected: Meter? by remember { mutableStateOf(null) }
     var showLongPressMenu by remember { mutableStateOf(false) }
     var editTitle by remember { mutableStateOf(false) }
     var newTitle by remember { mutableStateOf("") }
     var isDeleteMeter by remember { mutableStateOf(false) }
-    val lazyGridState = rememberLazyGridState()
-    val coroutineScope = rememberCoroutineScope()
-
-    fun isItemVisible(lazyGridState: LazyGridState, index: Int): Boolean {
-        val visibleItems = lazyGridState.layoutInfo.visibleItemsInfo
-        return visibleItems.any { it.index == index }
-    }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(2.dp),
+            .padding(0.dp),
         contentPadding = PaddingValues(1.dp),
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -290,21 +292,12 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewMod
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(10.dp))
-                        .background(gridColors[(index % gridColors.size)])
-                        .border(2.dp,
-                            if(meterSelected != null && (meterSelected!!.meterId == meters[index].meterId)) Color(0XFFFFC107)
-                            else gridColors[(index % gridColors.size)] ,
-                            RoundedCornerShape(10.dp))
+                        .background(brush = gridColors[(index % gridColors.size)])
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onLongPress = {
                                     showLongPressMenu = true
                                     meterSelected = meters[index]
-                                    if (!isItemVisible(lazyGridState, index)) {
-                                        coroutineScope.launch {
-                                            lazyGridState.scrollToItem(index)
-                                        }
-                                    }
                                 },
                                 onTap = {
                                     navController.navigate(Screen.CALCULATION.route + "/" + (meters[index].meterId))
@@ -313,68 +306,118 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewMod
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    MeterGridItem(
-                        meterName = meters[index].title!!
+                    Image(
+                        painter = painterResource(id = R.drawable.meterboxpattern),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillHeight,
+                        modifier = Modifier.fillMaxSize(),
                     )
-                }
-                if (showLongPressMenu && meterSelected != null && meterSelected?.meterId == meters[index].meterId) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Row(
-                        modifier = Modifier
-                            .border(1.dp, Color(0XFF00BCD4), RoundedCornerShape(10.dp))
-                            .clip(RoundedCornerShape(10.dp))
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                            .background(Color(0XFFFDFDFD)),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Row(
-                            modifier = Modifier.clickable {
-                                showLongPressMenu = false
-                                meterSelected = meters[index]
-                                editTitle = true
-                                isDeleteMeter = false
-                                newTitle = meters[index].title!!
-                            },
-                        ) {
-                            Icon(
-                                modifier = Modifier.padding(
-                                    top = 10.dp,
-                                    start = 10.dp,
-                                    end = 5.dp,
-                                    bottom = 10.dp
-                                ),
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit",
-                                tint = Color(0XFF00BCD4)
-                            )
-                            Text(
-                                modifier = Modifier.padding(top = 7.dp),
-                                text = "Edit",
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                color = Color(0XFF00BCD4)
-                            )
-                        }
-                        Icon(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .clickable {
-                                    showLongPressMenu = false
-                                    meterSelected = meters[index]
-                                    editTitle = false
-                                    isDeleteMeter = true
-                                    newTitle = ""
-                                },
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
-                            tint = Color(0XFFDC3545)
+                        MeterGridItem(
+                            meterName = meters[index].title!!
                         )
-                    }
                 }
             }
         }
     }
+    if (showLongPressMenu) {
+        AlertDialog(
+            onDismissRequest = {
+                editTitle = false
+                meterSelected = null
+                isDeleteMeter = false
+                showLongPressMenu = false
+            },
+            title = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = meterSelected!!.title!!,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0XFF00BCD4)
+                    )
+                    Icon(
+                        modifier = Modifier.clickable {
+                            showLongPressMenu = false
+                            editTitle = false
+                            meterSelected = null
+                            isDeleteMeter = false
+                        },
+                        imageVector = Icons.Default.Cancel,
+                        contentDescription = "Cancel",
+                        tint = Color(0XFF00BCD4)
+
+                    )
+                }
+            },
+            text = {
+                Row {
+                    Button(
+                        modifier = Modifier.weight(0.5f),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
+                        onClick = {
+                            editTitle = true
+                            newTitle = meterSelected!!.title!!
+                            showLongPressMenu = false
+                        }) {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                showLongPressMenu = false
+                                editTitle = false
+                                meterSelected = null
+                                isDeleteMeter = false
+                            },
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = Color.White
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(
+                            text = "Edit",
+                            color = Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Button(
+                        modifier = Modifier.weight(0.5f),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
+                        onClick = {
+                            isDeleteMeter = true
+                            showLongPressMenu = false
+                        }) {
+                        Icon(
+                            modifier = Modifier.clickable {
+                                showLongPressMenu = false
+                                editTitle = false
+                                meterSelected = null
+                                isDeleteMeter = false
+                            },
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            tint = Color.White
+
+                        )
+                        Spacer(modifier = Modifier.width(5.dp))
+                        Text(
+                            text = "Delete",
+                            color = Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {}
+        )
+    }
+
     if (editTitle) {
         AlertDialog(
             onDismissRequest = {
@@ -406,7 +449,7 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewMod
             },
             text = {
                 TextField(
-                    textStyle = MaterialTheme.typography.bodyLarge,
+                    textStyle = MaterialTheme.typography.titleLarge,
                     singleLine = true,
                     modifier = Modifier
                         .wrapContentWidth()
@@ -455,8 +498,10 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewMod
 
     if (isDeleteMeter) {
         AlertDialog(
-            onDismissRequest = { isDeleteMeter = false
-                               meterSelected = null},
+            onDismissRequest = {
+                isDeleteMeter = false
+                meterSelected = null
+            },
             title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -472,7 +517,7 @@ fun MeterGridView(meters: List<Meter>, navController: NavHostController, viewMod
                         modifier = Modifier.clickable {
                             isDeleteMeter = false
                             meterSelected = null
-                                                      },
+                        },
                         imageVector = Icons.Default.Cancel,
                         contentDescription = "Cancel",
                         tint = Color(0XFF00BCD4)

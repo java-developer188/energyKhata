@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Timeline
@@ -40,12 +39,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.energykhata.R
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.util.BannerAd
@@ -193,7 +194,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(Color.Transparent)
+            .background(Color(0XFFFDFDFD))
             .border(0.2.dp, Color(0XFFB3B2B2), RoundedCornerShape(10.dp))
     ) {
         Row(
@@ -246,7 +247,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
 
             // Delete Icon
             Icon(
-                imageVector = Icons.Default.Delete,
+                painter = painterResource(R.drawable.del_red),
                 contentDescription = "Delete Reading",
                 tint = Color(0XFFDC3545),
                 modifier = Modifier

@@ -35,7 +35,11 @@ class MainViewModel(private val meterRepository: MeterRepository, private val us
             val users = userRepository.getUsers()
             if(users.isNotEmpty()){
                     var maxMeterId = meterRepository.getMeters().mapNotNull { it.meterId }.maxOrNull()
-                    maxMeterId= maxMeterId!!+1
+                    if(maxMeterId!= null){
+                        maxMeterId += 1
+                    }else{
+                        maxMeterId = 1
+                    }
                     meterRepository.upsertMeter(Meter(maxMeterId, users[0].userId, "Meter $maxMeterId", 0, 0.0f, false))
                 }
             _meters.value = meterRepository.getMeters()
