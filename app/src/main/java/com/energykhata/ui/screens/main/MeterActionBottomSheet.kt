@@ -1,0 +1,170 @@
+package com.energykhata.ui.screens.main
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.energykhata.R
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MeterActionBottomSheet(
+    isBottomSheetVisible: MutableState<Boolean>,// State to control bottom sheet visibility
+    meterTitle: String,
+    onDismiss: () -> Unit,
+    onEdit: () -> Unit,                         // Callback for Edit action
+    onHistory: () -> Unit,                      // Callback for History action
+    onDelete: () -> Unit,                        // Callback for Delete action
+) {
+    if (isBottomSheetVisible.value) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                isBottomSheetVisible.value = false
+                onDismiss()
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 100.dp),
+                verticalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Text(
+                    text = meterTitle,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0XFF00BCD4),
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .fillMaxWidth()
+                )
+                Divider(
+                    thickness = 1.dp,
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .fillMaxWidth()
+                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+//                        .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 100.dp),
+
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .width(130.dp)
+                            .background(Color(0XFFE6F8FB))
+                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .clip(RoundedCornerShape(25))
+                            .clickable {
+                                isBottomSheetVisible.value = false
+                                onEdit()
+                            },
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.edit),
+                            contentDescription = "Edit Icon",
+                            tint = Color(0XFF00BCD4),
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(start = 10.dp, end = 5.dp),
+                        )
+                        Text(
+                            style = MaterialTheme.typography.headlineSmall,
+                            text = "Edit",
+                            color = Color(0XFF00BCD4),
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .width(130.dp)
+                            .background(Color(0XFFE6F8FB))
+                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .clip(RoundedCornerShape(25))
+                            .clickable {
+                                isBottomSheetVisible.value = false
+                                onHistory()
+                            },
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.history),
+                            contentDescription = "History Icon",
+                            tint = Color(0XFF00BCD4),
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(start = 10.dp, end = 5.dp),
+                        )
+                        Text(
+                            "History",
+                            color = Color(0XFF00BCD4),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .width(130.dp)
+                            .background(Color(0XFFE6F8FB))
+                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .clip(RoundedCornerShape(25))
+                            .clickable {
+                                isBottomSheetVisible.value = false
+                                onDelete()
+                            },
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.del_red),
+                            contentDescription = "Delete Icon",
+                            tint = Color(0XFFDC3545),
+                            modifier = Modifier
+                                .size(35.dp)
+                                .padding(start = 10.dp, end = 5.dp),
+                        )
+                        Text(
+                            "Delete",
+                            color = Color(0XFF00BCD4),
+                            style = MaterialTheme.typography.headlineSmall,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

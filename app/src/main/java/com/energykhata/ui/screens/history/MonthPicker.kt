@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -34,9 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.energykhata.R
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -82,13 +82,17 @@ fun MonthPicker(
             title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Absolute.Right
+                    horizontalArrangement = Arrangement.Absolute.Right,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        modifier = Modifier.clickable { cancelClicked() },
-                        imageVector = Icons.Default.Cancel,
+                        modifier = Modifier.clickable (
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { cancelClicked() }),
+                        painter = painterResource(id = R.drawable.close),
                         contentDescription = "Cancel",
-                        tint = Color(0XFF00BCD4)
+                        tint = Color(0XFFDC3545)
 
                     )
                 }
@@ -195,7 +199,7 @@ fun MonthPicker(
                                             .size(animatedSize)
                                             .background(
                                                 color = if (month == it) Color(0XFF00BCD4) else Color.Transparent,
-                                                shape = CircleShape
+                                                shape = RoundedCornerShape(10)
                                             )
                                     )
 

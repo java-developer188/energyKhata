@@ -29,7 +29,7 @@ fun SaveReadingToggle(
         Column {
             Text(
                 fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Bold,
                 color = Color(0XFF00BCD4),
                 text = "Save current reading?",
                 style = MaterialTheme.typography.bodyLarge

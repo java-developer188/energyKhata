@@ -3,6 +3,7 @@ package com.energykhata.ui.screens.history
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,10 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -108,7 +105,7 @@ fun MeterReadingScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         // LazyColumn for displaying readings
-        LazyColumn (modifier = Modifier.weight(1f)){
+        LazyColumn(modifier = Modifier.weight(1f)) {
             items(readings.size) { index ->
                 MeterReadingCard(
                     reading = readings[index],
@@ -123,8 +120,7 @@ fun MeterReadingScreen(
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(if (readings.size < 5) 250.dp else if (readings.size < 10) 150.dp else 100.dp)
-                .padding(8.dp),
+                .height(if (readings.size < 5) 120.dp else if (readings.size < 10) 100.dp else 80.dp),
             contentAlignment = Alignment.Center
         ) {
             Row(
@@ -133,7 +129,8 @@ fun MeterReadingScreen(
             ) {
                 // This commented Ad Unit ID is google testing code
                 // BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
-                BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
+//                BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
+                BannerAd(adUnitId = "ca-app-pub-8119818222880593/1535065254")
             }
         }
     }
@@ -145,7 +142,8 @@ fun MeterReadingScreen(
             title = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Confirm Deletion",
@@ -154,10 +152,15 @@ fun MeterReadingScreen(
                         color = Color(0XFF00BCD4)
                     )
                     Icon(
-                        modifier = Modifier.clickable { showDeleteDialog = false },
-                        imageVector = Icons.Default.Cancel,
+                        modifier = Modifier
+                            .size(25.dp)
+                            .clickable (
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = { showDeleteDialog = false }),
+                        painter = painterResource(id = R.drawable.close),
                         contentDescription = "Cancel",
-                        tint = Color(0XFF00BCD4)
+                        tint = Color(0XFFDC3545)
 
                     )
                 }
@@ -170,7 +173,12 @@ fun MeterReadingScreen(
                     colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
                     onClick = {
                         readingToDelete?.let {
-                            viewModel.deleteReading(it, meter.meterId!!, selectedMonth, selectedYear)
+                            viewModel.deleteReading(
+                                it,
+                                meter.meterId!!,
+                                selectedMonth,
+                                selectedYear
+                            )
                         }
                         showDeleteDialog = false
                     }) {
@@ -205,11 +213,15 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 modifier = Modifier
                     .weight(.8f)
             ) {
-                Row {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Icon(
-                        imageVector = Icons.Default.Timeline,
+                        modifier = Modifier
+                            .size(25.dp),
+                        painter = painterResource(id = R.drawable.reading),
                         contentDescription = "Meter Reading",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color(0XFFB3B2B2)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -222,9 +234,19 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 // Date and Time
-                Row {
-                    Row {
-                        Icon(Icons.Default.Event, contentDescription = "Date")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(25.dp),
+                            painter = painterResource(id = R.drawable.calender),
+                            contentDescription = "Date",
+                            tint = Color(0XFFB3B2B2)
+                        )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = reading.date + ", " + reading.year,
@@ -232,8 +254,16 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Row {
-                        Icon(Icons.Default.Schedule, contentDescription = "Time")
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(25.dp),
+                            painter = painterResource(id = R.drawable.time),
+                            contentDescription = "Time",
+                            tint = Color(0XFFB3B2B2)
+                        )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = reading.time,
@@ -251,8 +281,11 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 contentDescription = "Delete Reading",
                 tint = Color(0XFFDC3545),
                 modifier = Modifier
-                    .size(32.dp)
-                    .clickable { onDeleteClick() }
+                    .size(35.dp)
+                    .clickable (
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { onDeleteClick() })
                     .weight(.1f)
             )
         }

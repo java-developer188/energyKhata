@@ -12,12 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -36,6 +36,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.energykhata.R
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.ui.theme.ReadingRecorderTheme
@@ -78,6 +80,14 @@ fun CalculationComponent(
         modifier = Modifier
             .fillMaxSize(),
     ) {
+        Text(
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Normal,
+            fontSize = 20.sp,
+            text = "Calculate units instantly and track monthly usage effortlessly!",
+            style = MaterialTheme.typography.bodyLarge, // Regular text style
+            textAlign = TextAlign.Left // Center the text
+        )
         Spacer(modifier = Modifier.height(25.dp))
 
         OutlinedTextField(
@@ -124,7 +134,9 @@ fun CalculationComponent(
                         contentDescription = "Save",
                         tint = Color(0XFF28A745),
                         modifier = Modifier
-                            .clickable(indication = null,
+                            .size(35.dp)
+                            .clickable(
+                                indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
                                 onClick = {
                                     keyboardController?.hide()
@@ -142,10 +154,11 @@ fun CalculationComponent(
                             ))
                 } else {
                     Icon(
-                        imageVector = Icons.Default.Edit,
+                        painter = painterResource(R.drawable.edit),
                         contentDescription = "Edit",
                         tint = Color(0XFF00BCD4),
                         modifier = Modifier
+                            .size(35.dp)
                             .clickable(indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
                                 onClick = {

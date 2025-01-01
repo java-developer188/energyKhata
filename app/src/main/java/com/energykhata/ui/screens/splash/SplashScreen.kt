@@ -24,7 +24,7 @@ fun SplashScreen(navController: NavController) {
 
     // Delay for 2 seconds
     LaunchedEffect(Unit) {
-        delay(5000L)
+        delay(1000L)
         isSplashDisplayed = false
         navController.navigate(Screen.MAIN.route ) {
             popUpTo(Screen.SPLASH.route ) { inclusive = true }

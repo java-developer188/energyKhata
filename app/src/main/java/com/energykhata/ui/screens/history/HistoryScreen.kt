@@ -19,9 +19,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,6 +70,7 @@ fun HistoryScreen(
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier.fillMaxSize(),
+            alpha = 0.5f
         )
         Scaffold(
             containerColor = Color.Transparent,
@@ -92,8 +91,8 @@ fun HistoryScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp),
-                            imageVector = Icons.Default.ArrowBackIos, // Help icon
+                                .size(35.dp),
+                            painter = painterResource(id = R.drawable.arrow_back), // Help icon
                             contentDescription = "Back",
                             tint = Color(0XFF00BCD4)
                         )
@@ -104,7 +103,8 @@ fun HistoryScreen(
                         text = if (meters.isNotEmpty()) meters[0].title!! else "",
                         textAlign = TextAlign.Center,
                         color = Color(0XFF00BCD4),
-                        style = MaterialTheme.typography.headlineMedium
+                        style = MaterialTheme.typography.headlineLarge,
+                        fontWeight = FontWeight.ExtraBold
                     )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
@@ -120,8 +120,9 @@ fun HistoryScreen(
                         ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp),
-                            imageVector = Icons.Default.Home, // Help icon
+                                .size(35.dp),
+//                            imageVector = Icons.Default.Home, // Help icon
+                            painter = painterResource(id = R.drawable.home),
                             contentDescription = "Home",
                             tint = Color(0XFF00BCD4)
                         )

@@ -36,7 +36,7 @@ fun MeterGridItem(
             modifier = Modifier.padding(15.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.card_meter),
+                painter = painterResource(id = R.drawable.meter_icon),
                 contentDescription = "Meter Icon",
                 modifier = Modifier
                     .size(75.dp)
