@@ -83,4 +83,6 @@ dependencies {
     implementation ("com.google.accompanist:accompanist-flowlayout:0.27.0")
 
     implementation("com.google.android.gms:play-services-ads:23.6.0")
+    implementation(libs.androidx.ui.text.google.fonts)
+
 }

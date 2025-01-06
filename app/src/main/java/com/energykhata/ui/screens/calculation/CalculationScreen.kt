@@ -100,7 +100,7 @@ fun CalculationScreen(
                                 ),
                             painter = painterResource(id = R.drawable.arrow_back), // Help icon
                             contentDescription = "Back",
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
                     }
 
@@ -108,7 +108,7 @@ fun CalculationScreen(
                         modifier = Modifier.weight(0.9f),
                         text = if (meters.isNotEmpty()) meters[0].title!! else "",
                         textAlign = TextAlign.Center,
-                        color = Color(0XFF00BCD4),
+                        color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -124,7 +124,7 @@ fun CalculationScreen(
 //                            imageVector = Icons.Default.History,
                             painter = painterResource(id = R.drawable.history), // Help icon
                             contentDescription = "History",
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
                     }
                 }

@@ -37,7 +37,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -106,14 +105,26 @@ fun MeterReadingScreen(
 
         // LazyColumn for displaying readings
         LazyColumn(modifier = Modifier.weight(1f)) {
-            items(readings.size) { index ->
-                MeterReadingCard(
-                    reading = readings[index],
-                    onDeleteClick = {
-                        readingToDelete = readings[index]
-                        showDeleteDialog = true
-                    }
-                )
+            if (readings.isNotEmpty()) {
+                items(readings.size) { index ->
+                    MeterReadingCard(
+                        reading = readings[index],
+                        onDeleteClick = {
+                            readingToDelete = readings[index]
+                            showDeleteDialog = true
+                        }
+                    )
+                }
+            } else {
+                item {
+                    Text(
+                        text = "No records found.",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color(0XFFB3B2B2),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -140,37 +151,54 @@ fun MeterReadingScreen(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Confirm Deletion",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0XFF00BCD4)
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .size(25.dp)
-                            .clickable (
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() },
-                                onClick = { showDeleteDialog = false }),
-                        painter = painterResource(id = R.drawable.close),
-                        contentDescription = "Cancel",
-                        tint = Color(0XFFDC3545)
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Absolute.Right,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier
+                                .size(25.dp)
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    onClick = {
+                                        showDeleteDialog = false
+                                    }),
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = "Cancel",
+                            tint = Color(0XFFDC3545)
 
-                    )
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Confirm Deletion",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color(0XFF008D9F)
+                        )
+                    }
                 }
             },
-            text = { Text("Are you sure you want to delete this reading?") },
+            text = {
+                Text(
+                    "Are you sure you want to delete this reading?",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            },
             confirmButton = {
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4)),
+                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF008D9F)),
                     onClick = {
                         readingToDelete?.let {
                             viewModel.deleteReading(
@@ -186,7 +214,8 @@ fun MeterReadingScreen(
                         text = "Delete",
                         color = Color.White,
                         fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelMedium
                     )
                 }
             },
@@ -282,7 +311,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 tint = Color(0XFFDC3545),
                 modifier = Modifier
                     .size(35.dp)
-                    .clickable (
+                    .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = { onDeleteClick() })
@@ -307,7 +336,7 @@ fun MonthYearRow(
             .clickable(onClick = onClick) // Make the row clickable
             .background(Color(0XFFE6F8FB))
             .clip(RoundedCornerShape(10.dp))
-            .border(1.dp, Color(0XFF00BCD4), RoundedCornerShape(10.dp)),
+            .border(1.dp, Color(0XFF008D9F), RoundedCornerShape(10.dp)),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -315,10 +344,9 @@ fun MonthYearRow(
             modifier = Modifier
                 //.weight(0.9f)
                 .padding(top = 10.dp, bottom = 10.dp),
-            fontFamily = FontFamily.SansSerif,
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
-            color = Color(0XFF00BCD4),
+            color = Color(0XFF008D9F),
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.width(8.dp))
@@ -328,7 +356,7 @@ fun MonthYearRow(
                 .size(25.dp),
             imageVector = icon,
             contentDescription = "Month Icon",
-            tint = Color(0XFF00BCD4)
+            tint = Color(0XFF008D9F)
         )
     }
 }

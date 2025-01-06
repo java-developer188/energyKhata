@@ -3,7 +3,9 @@ package com.energykhata.ui.screens.calculation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun SaveReadingToggle(
@@ -28,14 +31,13 @@ fun SaveReadingToggle(
     ) {
         Column {
             Text(
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Bold,
-                color = Color(0XFF00BCD4),
+                color = Color(0XFF008D9F),
                 text = "Save current reading?",
                 style = MaterialTheme.typography.bodyLarge
             )
+            Spacer(modifier = Modifier.height(1.dp))
             Text(
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Normal,
                 text = "Turn off if this is a temporary calculation.",
                 style = MaterialTheme.typography.bodySmall,
@@ -46,14 +48,10 @@ fun SaveReadingToggle(
             checked = isSaveEnabled,
             onCheckedChange = onToggleChange,
             colors = SwitchDefaults.colors(
-                checkedIconColor = Color(0XFF00BCD4),
-                checkedThumbColor = Color(0XFF00BCD4),
+                checkedIconColor = Color(0XFF008D9F),
+                checkedThumbColor = Color(0XFF008D9F),
                 checkedTrackColor = Color(0XFFE6F8FB),
-                checkedBorderColor = Color(0XFF00BCD4),
-//                uncheckedIconColor = Color(0XFF00BCD4),
-//                uncheckedThumbColor = Color(0XFF00BCD4),
-//                uncheckedTrackColor = Color.White,
-//                uncheckedBorderColor = Color(0XFF00BCD4)
+                checkedBorderColor = Color(0XFF008D9F),
             )
         )
     }

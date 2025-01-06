@@ -40,7 +40,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -81,11 +80,10 @@ fun CalculationComponent(
             .fillMaxSize(),
     ) {
         Text(
-            fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Normal,
-            fontSize = 20.sp,
+            fontSize = 16.sp,
             text = "Calculate units instantly and track monthly usage effortlessly!",
-            style = MaterialTheme.typography.bodyLarge, // Regular text style
+            style = MaterialTheme.typography.labelLarge, // Regular text style
             textAlign = TextAlign.Left // Center the text
         )
         Spacer(modifier = Modifier.height(25.dp))
@@ -96,7 +94,6 @@ fun CalculationComponent(
                 .focusRequester(focusRequester)
                 .focusable(),
             textStyle = TextStyle(
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp,
                 letterSpacing = 1.em
@@ -123,7 +120,12 @@ fun CalculationComponent(
 
             },
             enabled = isEditing,
-            label = { Text("Previous Month Reading") },
+            label = {
+                Text(
+                    text = "Previous Month Reading",
+                    style = MaterialTheme.typography.labelMedium
+                )
+            },
             singleLine = true,
             isError = previousReadingError,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -156,7 +158,7 @@ fun CalculationComponent(
                     Icon(
                         painter = painterResource(R.drawable.edit),
                         contentDescription = "Edit",
-                        tint = Color(0XFF00BCD4),
+                        tint = Color(0XFF008D9F),
                         modifier = Modifier
                             .size(35.dp)
                             .clickable(indication = null,
@@ -168,10 +170,10 @@ fun CalculationComponent(
                 }
             },
             colors = TextFieldDefaults.colors(
-                cursorColor = Color(0XFF00BCD4),
+                cursorColor = Color(0XFF008D9F),
                 focusedIndicatorColor = Color(0XFFFFC107),
-                focusedTextColor = Color(0XFF00BCD4),
-                focusedLabelColor = Color(0XFF00BCD4),
+                focusedTextColor = Color(0XFF008D9F),
+                focusedLabelColor = Color(0XFF008D9F),
                 focusedContainerColor = Color.White,
 
                 disabledContainerColor = Color(0XFFE9E9E9),
@@ -193,7 +195,6 @@ fun CalculationComponent(
                 modifier = Modifier
                     .background(Color.Transparent)
                     .padding(top = 10.dp),
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Normal,
                 text = "The previous reading cannot be greater than the current reading",
                 style = MaterialTheme.typography.bodySmall,
@@ -205,7 +206,6 @@ fun CalculationComponent(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             textStyle = TextStyle(
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp,
                 letterSpacing = 1.em
@@ -232,15 +232,19 @@ fun CalculationComponent(
                 }
 
             },
-            label = { Text("Current Reading") },
+            label = {
+                Text(
+                    text = "Current Reading",
+                    style = MaterialTheme.typography.labelMedium
+                )},
             singleLine = true,
             isError = currentReadingError,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             colors = TextFieldDefaults.colors(
-                cursorColor = Color(0XFF00BCD4),
+                cursorColor = Color(0XFF008D9F),
                 focusedIndicatorColor = Color(0XFFFFC107),
-                focusedTextColor = Color(0XFF00BCD4),
-                focusedLabelColor = Color(0XFF00BCD4),
+                focusedTextColor = Color(0XFF008D9F),
+                focusedLabelColor = Color(0XFF008D9F),
                 focusedContainerColor = Color.White,
 
                 disabledContainerColor = Color(0XFFE9E9E9),
@@ -262,7 +266,6 @@ fun CalculationComponent(
                 modifier = Modifier
                     .background(Color.Transparent)
                     .padding(top = 10.dp),
-                fontFamily = FontFamily.SansSerif,
                 fontWeight = FontWeight.Normal,
                 text = "The current reading must be greater than the previous reading",
                 style = MaterialTheme.typography.bodySmall,
@@ -290,7 +293,7 @@ fun CalculationComponent(
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .background(
-                        if (previousReading > 0 && currentReading > 0) Color(0XFF00BCD4) else Color(
+                        if (previousReading > 0 && currentReading > 0) Color(0XFF008D9F) else Color(
                             0XFFB3B2B2
                         )
                     )
@@ -371,8 +374,9 @@ fun CalculationComponent(
                     }
                     withStyle(
                         style = SpanStyle(
+                            fontWeight = FontWeight.Bold,
                             color = Color(0XFF28A745),
-                            fontSize = TextUnit(20f, TextUnitType.Sp)
+                            fontSize = TextUnit(2f, TextUnitType.Em)
                         )
                     ) {
                         append("  units")

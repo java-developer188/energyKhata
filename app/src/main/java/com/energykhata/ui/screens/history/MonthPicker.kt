@@ -122,7 +122,7 @@ fun MonthPicker(
                                 ),
                             imageVector = Icons.Rounded.KeyboardArrowDown,
                             contentDescription = null,
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
 
                         Text(
@@ -130,7 +130,7 @@ fun MonthPicker(
                             text = year.toString(),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0XFF00BCD4)
+                            color = Color(0XFF008D9F)
                         )
 
                         Icon(
@@ -146,7 +146,7 @@ fun MonthPicker(
                                 ),
                             imageVector = Icons.Rounded.KeyboardArrowDown,
                             contentDescription = null,
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
 
                     }
@@ -198,14 +198,14 @@ fun MonthPicker(
                                         modifier = Modifier
                                             .size(animatedSize)
                                             .background(
-                                                color = if (month == it) Color(0XFF00BCD4) else Color.Transparent,
+                                                color = if (month == it) Color(0XFF008D9F) else Color.Transparent,
                                                 shape = RoundedCornerShape(10)
                                             )
                                     )
 
                                     Text(
                                         text = it,
-                                        color = if (month == it) Color.White else Color(0XFF00BCD4),
+                                        color = if (month == it) Color.White else Color(0XFF008D9F),
                                         fontWeight = FontWeight.Medium
                                     )
 
@@ -230,7 +230,7 @@ fun MonthPicker(
                         )
                     },
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF00BCD4))
+                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF008D9F))
                 ) {
 
                     Text(

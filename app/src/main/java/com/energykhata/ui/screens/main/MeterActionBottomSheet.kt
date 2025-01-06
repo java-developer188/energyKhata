@@ -50,7 +50,7 @@ fun MeterActionBottomSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 100.dp),
+                    .padding(bottom = 25.dp),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
@@ -58,9 +58,9 @@ fun MeterActionBottomSheet(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0XFF00BCD4),
+                    color = Color(0XFF008D9F),
                     modifier = Modifier
-                        .padding(bottom = 10.dp)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 10.dp)
                         .fillMaxWidth()
                 )
                 Divider(
@@ -73,7 +73,7 @@ fun MeterActionBottomSheet(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
-//                        .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 100.dp),
+                        .padding(start = 16.dp, end = 16.dp, bottom = 100.dp),
 
                 ) {
                     Row(
@@ -81,7 +81,7 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             .width(130.dp)
                             .background(Color(0XFFE6F8FB))
-                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
@@ -90,19 +90,20 @@ fun MeterActionBottomSheet(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+
+                        Text(
+                            style = MaterialTheme.typography.titleLarge,
+                            text = "Edit",
+                            color = Color(0XFF008D9F),
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+                        )
                         Icon(
                             painter = painterResource(R.drawable.edit),
                             contentDescription = "Edit Icon",
-                            tint = Color(0XFF00BCD4),
+                            tint = Color(0XFF008D9F),
                             modifier = Modifier
                                 .size(35.dp)
-                                .padding(start = 10.dp, end = 5.dp),
-                        )
-                        Text(
-                            style = MaterialTheme.typography.headlineSmall,
-                            text = "Edit",
-                            color = Color(0XFF00BCD4),
-                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                                .padding(start = 5.dp, end = 10.dp),
                         )
                     }
                     Row(
@@ -110,7 +111,7 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             .width(130.dp)
                             .background(Color(0XFFE6F8FB))
-                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
@@ -119,19 +120,19 @@ fun MeterActionBottomSheet(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Text(
+                            "History",
+                            color = Color(0XFF008D9F),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+                        )
                         Icon(
                             painter = painterResource(R.drawable.history),
                             contentDescription = "History Icon",
-                            tint = Color(0XFF00BCD4),
+                            tint = Color(0XFF008D9F),
                             modifier = Modifier
                                 .size(35.dp)
-                                .padding(start = 10.dp, end = 5.dp),
-                        )
-                        Text(
-                            "History",
-                            color = Color(0XFF00BCD4),
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                                .padding(start = 5.dp, end = 10.dp),
                         )
                     }
                     Row(
@@ -139,7 +140,7 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             .width(130.dp)
                             .background(Color(0XFFE6F8FB))
-                            .border(2.dp, Color(0XFF00BCD4), RoundedCornerShape(25))
+                            .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
@@ -148,19 +149,19 @@ fun MeterActionBottomSheet(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Text(
+                            "Delete",
+                            color = Color(0XFF008D9F),
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
+                        )
                         Icon(
                             painter = painterResource(R.drawable.del_red),
                             contentDescription = "Delete Icon",
                             tint = Color(0XFFDC3545),
                             modifier = Modifier
                                 .size(35.dp)
-                                .padding(start = 10.dp, end = 5.dp),
-                        )
-                        Text(
-                            "Delete",
-                            color = Color(0XFF00BCD4),
-                            style = MaterialTheme.typography.headlineSmall,
-                            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, end = 10.dp)
+                                .padding(start = 5.dp, end = 10.dp),
                         )
                     }
                 }

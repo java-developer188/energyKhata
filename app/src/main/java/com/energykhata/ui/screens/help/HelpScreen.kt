@@ -80,7 +80,7 @@ fun HelpScreen(
                                 .size(35.dp),
                             painter = painterResource(id = R.drawable.arrow_back), // Help icon
                             contentDescription = "Back",
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
                     }
 
@@ -88,7 +88,7 @@ fun HelpScreen(
                         modifier = Modifier.weight(0.9f),
                         text = "Help",
                         textAlign = TextAlign.Center,
-                        color = Color(0XFF00BCD4),
+                        color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.ExtraBold
                     )
@@ -107,10 +107,9 @@ fun HelpScreen(
                         Icon(
                             modifier = Modifier
                                 .size(35.dp),
-//                            imageVector = Icons.Default.Home, // Help icon
                             painter = painterResource(id = R.drawable.home),
                             contentDescription = "Home",
-                            tint = Color(0XFF00BCD4)
+                            tint = Color(0XFF008D9F)
                         )
                     }
                 }
@@ -203,14 +202,14 @@ fun ExpandableHelpItem(title: String, content: String) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                color = Color(0XFF00BCD4),
+                color = Color(0XFF008D9F),
                 modifier = Modifier
                     .weight(1f)
             )
             Icon(
                 imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                 contentDescription = if (isExpanded) "Collapse" else "Expand",
-                tint = Color(0XFF00BCD4)
+                tint = Color(0XFF008D9F)
             )
         }
         AnimatedVisibility(visible = isExpanded) {
