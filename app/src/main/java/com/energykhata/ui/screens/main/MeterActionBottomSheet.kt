@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.energykhata.R
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +60,7 @@ fun MeterActionBottomSheet(
                     text = meterTitle,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.headlineMedium,
+                    fontSize = scaledFontSize(28f, 25f , 22f),
                     fontWeight = FontWeight.Bold,
                     color = Color(0XFF008D9F),
                     modifier = Modifier
@@ -79,7 +83,8 @@ fun MeterActionBottomSheet(
                     Row(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .width(130.dp)
+                            //.width(130.dp)
+                            .weight(1f)
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
@@ -93,6 +98,7 @@ fun MeterActionBottomSheet(
 
                         Text(
                             style = MaterialTheme.typography.titleLarge,
+                            fontSize = scaledFontSize(22f,20f,18f),
                             text = "Edit",
                             color = Color(0XFF008D9F),
                             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
@@ -102,14 +108,16 @@ fun MeterActionBottomSheet(
                             contentDescription = "Edit Icon",
                             tint = Color(0XFF008D9F),
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, 33f , 31f))
                                 .padding(start = 5.dp, end = 10.dp),
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Row(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .width(130.dp)
+                            //.width(130.dp)
+                            .weight(1f)
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
@@ -124,6 +132,7 @@ fun MeterActionBottomSheet(
                             "History",
                             color = Color(0XFF008D9F),
                             style = MaterialTheme.typography.titleLarge,
+                            fontSize = scaledFontSize(22f,20f,18f),
                             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
                         )
                         Icon(
@@ -131,14 +140,16 @@ fun MeterActionBottomSheet(
                             contentDescription = "History Icon",
                             tint = Color(0XFF008D9F),
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, 33f , 31f))
                                 .padding(start = 5.dp, end = 10.dp),
                         )
                     }
+                    Spacer(modifier = Modifier.width(5.dp))
                     Row(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .width(130.dp)
+                            //.width(130.dp)
+                            .weight(1f)
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
                             .clip(RoundedCornerShape(25))
@@ -153,6 +164,7 @@ fun MeterActionBottomSheet(
                             "Delete",
                             color = Color(0XFF008D9F),
                             style = MaterialTheme.typography.titleLarge,
+                            fontSize = scaledFontSize(22f,20f,18f),
                             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 10.dp)
                         )
                         Icon(
@@ -160,7 +172,7 @@ fun MeterActionBottomSheet(
                             contentDescription = "Delete Icon",
                             tint = Color(0XFFDC3545),
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, 33f , 31f))
                                 .padding(start = 5.dp, end = 10.dp),
                         )
                     }

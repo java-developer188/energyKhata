@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -49,18 +50,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -72,6 +74,8 @@ import com.energykhata.roomdb.repositories.UserRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
 import com.energykhata.util.BannerAd
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.MainViewModel
 
 
@@ -79,11 +83,11 @@ import com.energykhata.viewmodels.MainViewModel
 fun MainScreen(
     navController: NavHostController,
     meterRepository: MeterRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
 ) {
     val context = LocalContext.current
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-    BackHandler{
+    BackHandler {
         (context as? Activity)?.finish() //Exit the application
 
         //just stop the further navigation
@@ -126,17 +130,24 @@ fun MainScreen(
                         .background(Color.Transparent),
                     horizontalArrangement = Arrangement.Absolute.Right
                 ) {
-                    Text(
+                    Row(
                         modifier = Modifier
-                            .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
+                            .wrapContentSize()
                             .weight(.9f),
-                        text = "Energy Khata",
-                        fontWeight = FontWeight.ExtraBold,
-                        fontSize = 45.sp,
-                        color = Color(0XFF008D9F),
-                        style = MaterialTheme.typography.headlineLarge, // Big heading
-                        textAlign = TextAlign.Left // Center the text
-                    )
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 10.dp, start = 10.dp, end = 10.dp, bottom = 5.dp)
+                                .weight(.9f),
+                            text = "Energy Khata",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = scaledFontSize(45f, 35f, 25f),
+                            color = Color(0XFF008D9F),
+                            style = MaterialTheme.typography.headlineLarge, // Big heading
+                            textAlign = TextAlign.Left // Center the text
+                        )
+                    }
                     IconButton(
                         onClick = { navController.navigate(Screen.HELP.route) },
                         modifier = Modifier
@@ -148,7 +159,7 @@ fun MainScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                                 .indication(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
@@ -187,11 +198,13 @@ fun MainScreen(
 @Composable
 private fun PortraitLayout(
     meters: List<Meter>,
-    addButtonEnable : Boolean,
+    addButtonEnable: Boolean,
     navController: NavHostController,
     viewModel: MainViewModel,
     onDeleteMeter: (Meter?) -> Unit,
 ) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -201,12 +214,13 @@ private fun PortraitLayout(
     ) {
         Column(
             modifier = Modifier
-                .weight(0.07f)
                 .wrapContentHeight()
+                .padding(bottom = 5.dp)
         ) {
             Text(
 //                fontWeight = FontWeight.Normal,
-                fontSize = 16.sp,
+                fontSize = scaledFontSize(16f, 14f, 12f),
+                modifier = Modifier.scale(1.0f),
                 text = "Easily manage and store readings of your energy meters. Tap the Help button anytime for guidance on using the app.",
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Left
@@ -224,7 +238,9 @@ private fun PortraitLayout(
                 onDeleteMeter
             )
         }
-        if (addButtonEnable && (meters.size < 8) ) {
+
+        if (addButtonEnable && (meters.size < 8)) {
+            Spacer(modifier = Modifier.height(5.dp))
             Row(
                 modifier = Modifier
                     .wrapContentHeight()
@@ -249,12 +265,14 @@ private fun PortraitLayout(
                     Text(
                         modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
                         text = "Add Meter",
+                        fontSize = scaledFontSize(24f, 22f, 20f),
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
                         color = Color(0XFFFFF9E6)
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
         } else {
             Spacer(modifier = Modifier.height(10.dp))
         }
@@ -284,8 +302,10 @@ fun MeterGridView(
 
     var borderRadiantColors =
         listOf(
-            Brush.radialGradient(colors = listOf( Color(0xFF008798),Color(0xFF00BCD4)),
-                radius =600f),
+            Brush.radialGradient(
+                colors = listOf(Color(0xFF008798), Color(0xFF00BCD4)),
+                radius = 600f
+            ),
         )
     val iconColorListA =
         listOf(Color(0xFFE6F2FF), Color(0xFFD4E9FF), Color(0xFFDDFBFF), Color(0xFFCDF9FF))
@@ -397,7 +417,7 @@ fun MeterGridView(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp)
+                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f)))
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() },
@@ -418,9 +438,9 @@ fun MeterGridView(
                     ) {
                         Text(
                             text = "Meter Title",
-                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
+                            fontSize = scaledFontSize(24f, 22f, 20f),
                             color = Color(0XFF008D9F)
                         )
 
@@ -467,9 +487,9 @@ fun MeterGridView(
                     Text(
                         text = "Save",
                         color = Color.White,
-                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        fontSize = scaledFontSize(15f, 14f, 13f),
                     )
                 }
             },
@@ -492,7 +512,7 @@ fun MeterGridView(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp)
+                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f)))
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() },
@@ -513,9 +533,9 @@ fun MeterGridView(
                     ) {
                         Text(
                             text = "Confirm Deletion",
-                            fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
+                            fontSize = scaledFontSize(24f, 20f, 18f),
                             color = Color(0XFF008D9F)
                         )
                     }
@@ -525,7 +545,8 @@ fun MeterGridView(
                 Text(
                     "Are you sure you want to delete \"${meterSelected?.title}\" ?",
                     style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    fontSize = scaledFontSize(16f, 15f, 14f),
                 )
             },
             confirmButton = {
@@ -541,9 +562,9 @@ fun MeterGridView(
                     Text(
                         text = "Delete",
                         color = Color.White,
-                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        fontSize = scaledFontSize(15f, 14f, 13f),
                     )
                 }
             },
