@@ -49,11 +49,12 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import androidx.compose.ui.unit.sp
 import com.energykhata.R
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.ui.theme.ReadingRecorderTheme
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.MeterViewModel
 import java.util.Calendar
 
@@ -81,10 +82,10 @@ fun CalculationComponent(
     ) {
         Text(
             fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
             text = "Calculate units instantly and track monthly usage effortlessly!",
-            style = MaterialTheme.typography.labelLarge, // Regular text style
-            textAlign = TextAlign.Left // Center the text
+            style = MaterialTheme.typography.labelLarge,
+            fontSize = scaledFontSize(16f,14f,12f),
+            textAlign = TextAlign.Left
         )
         Spacer(modifier = Modifier.height(25.dp))
 
@@ -95,7 +96,7 @@ fun CalculationComponent(
                 .focusable(),
             textStyle = TextStyle(
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
+                fontSize = scaledFontSize(24f,22f,20f),
                 letterSpacing = 1.em
             ),
             value = if (previousReading == 0L) "" else previousReading.toString(),
@@ -123,7 +124,8 @@ fun CalculationComponent(
             label = {
                 Text(
                     text = "Previous Month Reading",
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = scaledFontSize(15f,13f,11f)
                 )
             },
             singleLine = true,
@@ -136,7 +138,7 @@ fun CalculationComponent(
                         contentDescription = "Save",
                         tint = Color(0XFF28A745),
                         modifier = Modifier
-                            .size(35.dp)
+                            .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
@@ -160,7 +162,7 @@ fun CalculationComponent(
                         contentDescription = "Edit",
                         tint = Color(0XFF008D9F),
                         modifier = Modifier
-                            .size(35.dp)
+                            .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                             .clickable(indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
                                 onClick = {
@@ -195,9 +197,11 @@ fun CalculationComponent(
                 modifier = Modifier
                     .background(Color.Transparent)
                     .padding(top = 10.dp),
-                fontWeight = FontWeight.Normal,
-                text = "The previous reading cannot be greater than the current reading",
                 style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Normal,
+                fontSize = scaledFontSize(12f,11f,10f),
+                text = "The previous reading cannot be greater than the current reading",
+
                 color = Color(0XFFDC3545)
             )
         }
@@ -207,7 +211,7 @@ fun CalculationComponent(
             modifier = Modifier.fillMaxWidth(),
             textStyle = TextStyle(
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
+                fontSize = scaledFontSize(24f,22f,20f),
                 letterSpacing = 1.em
             ),
             value = if (currentReading == 0L) "" else currentReading.toString(),
@@ -235,7 +239,8 @@ fun CalculationComponent(
             label = {
                 Text(
                     text = "Current Reading",
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
+                    fontSize = scaledFontSize(15f,13f,11f)
                 )},
             singleLine = true,
             isError = currentReadingError,
@@ -266,9 +271,10 @@ fun CalculationComponent(
                 modifier = Modifier
                     .background(Color.Transparent)
                     .padding(top = 10.dp),
-                fontWeight = FontWeight.Normal,
-                text = "The current reading must be greater than the previous reading",
                 style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Normal,
+                fontSize = scaledFontSize(12f,11f,10f),
+                text = "The current reading must be greater than the previous reading",
                 color = Color(0XFFDC3545)
             )
         }
@@ -347,6 +353,7 @@ fun CalculationComponent(
                     modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
                     text = "Calculate Units",
                     style = MaterialTheme.typography.headlineSmall,
+                    fontSize = scaledFontSize(24f,20f,18f),
                     textAlign = TextAlign.Center,
                     color = Color(0XFFFFF9E6)
                 )
@@ -367,7 +374,7 @@ fun CalculationComponent(
                         style = SpanStyle(
                             fontWeight = FontWeight.Bold,
                             color = Color(0XFF28A745),
-                            fontSize = TextUnit(45f, TextUnitType.Sp)
+                            fontSize = scaledFontSize(45f,40f,35f)
                         )
                     ) {
                         append("$unitsConsume")

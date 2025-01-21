@@ -45,6 +45,8 @@ import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
 import com.energykhata.util.BannerAd
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.MeterViewModel
 
 @Composable
@@ -93,7 +95,7 @@ fun CalculationScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                                 .indication(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
@@ -110,7 +112,8 @@ fun CalculationScreen(
                         textAlign = TextAlign.Center,
                         color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = scaledFontSize(32f,30f,28f)
                     )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
@@ -120,7 +123,7 @@ fun CalculationScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
 //                            imageVector = Icons.Default.History,
                             painter = painterResource(id = R.drawable.history), // Help icon
                             contentDescription = "History",
