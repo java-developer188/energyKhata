@@ -44,6 +44,8 @@ import com.energykhata.R
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
 import com.energykhata.util.BannerAd
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 
 @Composable
 fun HelpScreen(
@@ -77,7 +79,7 @@ fun HelpScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
                             painter = painterResource(id = R.drawable.arrow_back), // Help icon
                             contentDescription = "Back",
                             tint = Color(0XFF008D9F)
@@ -90,7 +92,8 @@ fun HelpScreen(
                         textAlign = TextAlign.Center,
                         color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = scaledFontSize(32f,30f,28f)
                     )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
@@ -106,7 +109,7 @@ fun HelpScreen(
                         ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
                             painter = painterResource(id = R.drawable.home),
                             contentDescription = "Home",
                             tint = Color(0XFF008D9F)
@@ -202,6 +205,7 @@ fun ExpandableHelpItem(title: String, content: String) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
+                fontSize = scaledFontSize(22f,20f,18f),
                 color = Color(0XFF008D9F),
                 modifier = Modifier
                     .weight(1f)
@@ -231,11 +235,13 @@ fun BulletText(text: String, delimiter: String) {
                 Text(
                     text = "•",
                     style = MaterialTheme.typography.bodyLarge,
+                    fontSize = scaledFontSize(16f,14f,12f),
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
                     text = point,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = scaledFontSize(16f,14f,12f),
                 )
             }
         }
