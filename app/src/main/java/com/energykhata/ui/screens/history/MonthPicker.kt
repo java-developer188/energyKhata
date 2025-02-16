@@ -35,8 +35,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.energykhata.R
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
@@ -111,7 +112,7 @@ fun MonthPicker(
 
                         Icon(
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                                 .rotate(90f)
                                 .clickable(
                                     indication = null,
@@ -128,14 +129,14 @@ fun MonthPicker(
                         Text(
                             modifier = Modifier.padding(horizontal = 20.dp),
                             text = year.toString(),
-                            fontSize = 24.sp,
+                            fontSize = scaledFontSize(24f,22f,20f),
                             fontWeight = FontWeight.Bold,
                             color = Color(0XFF008D9F)
                         )
 
                         Icon(
                             modifier = Modifier
-                                .size(35.dp)
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                                 .rotate(-90f)
                                 .clickable(
                                     indication = null,
@@ -206,7 +207,8 @@ fun MonthPicker(
                                     Text(
                                         text = it,
                                         color = if (month == it) Color.White else Color(0XFF008D9F),
-                                        fontWeight = FontWeight.Medium
+                                        fontWeight = FontWeight.Medium,
+                                        fontSize = scaledFontSize(16f,14f,12f),
                                     )
 
                                 }
@@ -236,7 +238,7 @@ fun MonthPicker(
                     Text(
                         text = "OK",
                         color = Color.White,
-                        fontSize = 15.sp,
+                        fontSize = scaledFontSize(15f,13f,11f),
                         fontWeight = FontWeight.Bold
                     )
 

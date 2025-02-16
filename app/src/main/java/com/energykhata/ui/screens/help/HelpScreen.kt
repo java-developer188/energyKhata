@@ -56,7 +56,7 @@ fun HelpScreen(
         Image(
             painter = painterResource(id = R.drawable.bgpattern),
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize(),
             alpha = 0.5f
         )
@@ -93,7 +93,7 @@ fun HelpScreen(
                         color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        fontSize = scaledFontSize(32f,30f,28f)
+                        fontSize = scaledFontSize(32f,28f,26f)
                     )
                     IconButton(
                         modifier = Modifier.weight(0.1f),
@@ -236,12 +236,14 @@ fun BulletText(text: String, delimiter: String) {
                     text = "•",
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = scaledFontSize(16f,14f,12f),
+                    color = Color.Black,
                     modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
                     text = point,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = scaledFontSize(16f,14f,12f),
+                    color = Color.Black,
                 )
             }
         }

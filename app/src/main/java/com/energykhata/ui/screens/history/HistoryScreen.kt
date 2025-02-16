@@ -3,6 +3,8 @@ package com.energykhata.ui.screens.history
 import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +39,8 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.ReadingViewModel
 
 @Composable
@@ -58,7 +63,7 @@ fun HistoryScreen(
         Image(
             painter = painterResource(id = R.drawable.bgpattern),
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize(),
             alpha = 0.5f
         )
@@ -76,12 +81,20 @@ fun HistoryScreen(
                 ) {
 
                     IconButton(
-                        modifier = Modifier.weight(0.1f),
+                        modifier = Modifier.weight(0.1f)
+                            .indication(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ),
                         onClick = { navController.navigateUp() }
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+                                .indication(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ),
                             painter = painterResource(id = R.drawable.arrow_back), // Help icon
                             contentDescription = "Back",
                             tint = Color(0XFF008D9F)
@@ -94,10 +107,15 @@ fun HistoryScreen(
                         textAlign = TextAlign.Center,
                         color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
-                        fontWeight = FontWeight.ExtraBold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = scaledFontSize(32f,28f,26f)
                     )
                     IconButton(
-                        modifier = Modifier.weight(0.1f),
+                        modifier = Modifier.weight(0.1f)
+                            .indication(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ),
                         onClick = {
                             navController.navigate(Screen.MAIN.route)
                             {
@@ -110,7 +128,11 @@ fun HistoryScreen(
                         ) {
                         Icon(
                             modifier = Modifier
-                                .size(35.dp),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+                                .indication(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ),
                             painter = painterResource(id = R.drawable.home),
                             contentDescription = "Home",
                             tint = Color(0XFF008D9F)
@@ -123,7 +145,7 @@ fun HistoryScreen(
                 modifier = Modifier.padding(paddingValues)
             ) {
                 if (meters.isNotEmpty()) {
-                    MeterReadingScreen(
+                    MeterReadingComponent(
                         viewModel = viewModel,
                         meter = meters[0],
                         readings = readings

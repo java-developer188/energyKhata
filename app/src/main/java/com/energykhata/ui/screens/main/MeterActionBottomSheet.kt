@@ -77,6 +77,7 @@ fun MeterActionBottomSheet(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .background(Color.Transparent)
                         .padding(start = 16.dp, end = 16.dp, bottom = 100.dp),
 
                 ) {
@@ -85,9 +86,9 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             //.width(130.dp)
                             .weight(1f)
+                            .clip(RoundedCornerShape(25))
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
-                            .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
                                 onEdit()
@@ -118,9 +119,9 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             //.width(130.dp)
                             .weight(1f)
+                            .clip(RoundedCornerShape(25))
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
-                            .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
                                 onHistory()
@@ -150,9 +151,9 @@ fun MeterActionBottomSheet(
                             .wrapContentHeight()
                             //.width(130.dp)
                             .weight(1f)
+                            .clip(RoundedCornerShape(25))
                             .background(Color(0XFFE6F8FB))
                             .border(2.dp, Color(0XFF008D9F), RoundedCornerShape(25))
-                            .clip(RoundedCornerShape(25))
                             .clickable {
                                 isBottomSheetVisible.value = false
                                 onDelete()

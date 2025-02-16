@@ -56,6 +56,7 @@ import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.MeterViewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 @Composable
@@ -325,11 +326,8 @@ fun CalculationComponent(
                                         .split("GMT")[0]
                                         .trim()
                                         .substringBeforeLast(' ')
-                                    val time = instant.time
-                                        .toString()
-                                        .split("GMT")[0]
-                                        .trim()
-                                        .substringAfterLast(' ')
+                                    val time = SimpleDateFormat("hh:mm a", java.util.Locale.getDefault()).format(instant.time)
+
                                     viewModel.saveReadingInLogs(
                                         Reading(
                                             null,

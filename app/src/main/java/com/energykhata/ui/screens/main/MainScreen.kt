@@ -229,7 +229,9 @@ private fun PortraitLayout(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(top = 10.dp)
                 .weight(0.5f)
+
         ) {
             MeterGridView(
                 meters = meters,
@@ -448,30 +450,32 @@ fun MeterGridView(
                 }
             },
             text = {
-                TextField(
-                    textStyle = MaterialTheme.typography.titleLarge,
-                    singleLine = true,
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .wrapContentHeight(),
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextField(
+                        textStyle = MaterialTheme.typography.titleLarge,
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
 
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        cursorColor = Color(0XFF008D9F),
-                        focusedTextColor = Color(0XFF008D9F),
-                        unfocusedTextColor = Color(0XFF008D9F),
-                    ),
-                    enabled = true,
-                    value = newTitle,
-                    onValueChange = {
-                        newTitle = if (it.length <= 15) {
-                            it
-                        } else {
-                            it.substring(0, 15)
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.Transparent,
+                            unfocusedContainerColor = Color.Transparent,
+                            cursorColor = Color(0XFF008D9F),
+                            focusedTextColor = Color(0XFF008D9F),
+                            unfocusedTextColor = Color(0XFF008D9F),
+                        ),
+                        enabled = true,
+                        value = newTitle,
+                        onValueChange = {
+                            newTitle = if (it.length <= 15) {
+                                it
+                            } else {
+                                it.substring(0, 15)
+                            }
                         }
-                    }
-                )
+                    )
+                }
             },
             confirmButton = {
                 Button(
@@ -542,12 +546,17 @@ fun MeterGridView(
                 }
             },
             text = {
-                Text(
-                    "Are you sure you want to delete \"${meterSelected?.title}\" ?",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    fontSize = scaledFontSize(16f, 15f, 14f),
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "Are you sure you want to delete \"${meterSelected?.title}\" ?",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        fontSize = scaledFontSize(16f, 15f, 14f),
+                    )
+                }
             },
             confirmButton = {
                 Button(
@@ -562,8 +571,8 @@ fun MeterGridView(
                     Text(
                         text = "Delete",
                         color = Color.White,
-                        fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
                         fontSize = scaledFontSize(15f, 14f, 13f),
                     )
                 }

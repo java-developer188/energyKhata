@@ -1,5 +1,6 @@
 package com.energykhata.ui.screens.splash
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.energykhata.R
+import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
 import kotlinx.coroutines.delay
 
@@ -21,10 +23,11 @@ import kotlinx.coroutines.delay
 fun SplashScreen(navController: NavController) {
     // State to manage the display time
     var isSplashDisplayed by remember { mutableStateOf(true) }
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     // Delay for 2 seconds
     LaunchedEffect(Unit) {
-        delay(1000L)
+        delay(4000L)
         isSplashDisplayed = false
         navController.navigate(Screen.MAIN.route ) {
             popUpTo(Screen.SPLASH.route ) { inclusive = true }

@@ -40,7 +40,7 @@ fun MeterGridItem(
             modifier = Modifier.padding(15.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.meter_icon),
+                painter = painterResource(id = R.drawable.power_meter),
                 contentDescription = "Meter Icon",
                 modifier = Modifier
                     .size(
@@ -57,7 +57,7 @@ fun MeterGridItem(
                 text = meterName,
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = scaledFontSize(22f,18f,14f),
-                color = Color(0XFF008D9F),
+                color = Color(0XFF00555F),
                 fontWeight = FontWeight.Bold,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

@@ -41,16 +41,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.energykhata.R
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
 import com.energykhata.util.BannerAd
+import com.energykhata.util.scaledFontSize
+import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.ReadingViewModel
 import java.util.Calendar
 
 @Composable
-fun MeterReadingScreen(
+fun MeterReadingComponent(
     viewModel: ReadingViewModel,
     meter: Meter,
     readings: List<Reading>,
@@ -122,6 +123,7 @@ fun MeterReadingScreen(
                         style = MaterialTheme.typography.titleLarge,
                         color = Color(0XFFB3B2B2),
                         textAlign = TextAlign.Center,
+                        fontSize = scaledFontSize(22f, 20f, 18f),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -159,7 +161,7 @@ fun MeterReadingScreen(
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp)
+                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f)))
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() },
@@ -179,20 +181,26 @@ fun MeterReadingScreen(
                     ) {
                         Text(
                             text = "Confirm Deletion",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = scaledFontSize(24f, 20f, 18f),
                             color = Color(0XFF008D9F)
                         )
                     }
                 }
             },
             text = {
-                Text(
-                    "Are you sure you want to delete this reading?",
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        "Are you sure you want to delete this reading?",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                        fontSize = scaledFontSize(16f, 15f, 14f),
+                    )
+                }
             },
             confirmButton = {
                 Button(
@@ -213,9 +221,9 @@ fun MeterReadingScreen(
                     Text(
                         text = "Delete",
                         color = Color.White,
-                        fontSize = 15.sp,
+                        style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelMedium
+                        fontSize = scaledFontSize(15f, 14f, 13f),
                     )
                 }
             },
@@ -247,7 +255,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(25.dp),
+                            .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
                         painter = painterResource(id = R.drawable.reading),
                         contentDescription = "Meter Reading",
                         tint = Color(0XFFB3B2B2)
@@ -257,6 +265,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                         text = "${reading.reading}",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
+                        fontSize = scaledFontSize(28f, 26f, 24f),
                         color = Color(0XFF6B6B6B)
                     )
                 }
@@ -271,7 +280,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp),
+                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
                             painter = painterResource(id = R.drawable.calender),
                             contentDescription = "Date",
                             tint = Color(0XFFB3B2B2)
@@ -279,7 +288,8 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = reading.date + ", " + reading.year,
-                            color = Color(0XFFB3B2B2)
+                            color = Color(0XFFB3B2B2),
+                            fontSize = scaledFontSize(13f, 12f, 11f),
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
@@ -288,7 +298,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(25.dp),
+                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
                             painter = painterResource(id = R.drawable.time),
                             contentDescription = "Time",
                             tint = Color(0XFFB3B2B2)
@@ -296,7 +306,8 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = reading.time,
-                            color = Color(0XFFB3B2B2)
+                            color = Color(0XFFB3B2B2),
+                            fontSize = scaledFontSize(13f, 12f, 11f),
                         )
                     }
                 }
@@ -310,7 +321,7 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
                 contentDescription = "Delete Reading",
                 tint = Color(0XFFDC3545),
                 modifier = Modifier
-                    .size(35.dp)
+                    .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -347,13 +358,14 @@ fun MonthYearRow(
             text = "$monthName $year",
             style = MaterialTheme.typography.headlineMedium,
             color = Color(0XFF008D9F),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            fontSize = scaledFontSize(28f, 24f, 20f),
         )
         Spacer(modifier = Modifier.width(8.dp))
         Icon(
             modifier = Modifier
                 //.weight(0.1f)
-                .size(25.dp),
+                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
             imageVector = icon,
             contentDescription = "Month Icon",
             tint = Color(0XFF008D9F)

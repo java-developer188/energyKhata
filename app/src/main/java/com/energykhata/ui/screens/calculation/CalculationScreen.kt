@@ -68,7 +68,7 @@ fun CalculationScreen(
         Image(
             painter = painterResource(id = R.drawable.bgpattern),
             contentDescription = null,
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize(),
             alpha = 0.5f
         )
@@ -113,17 +113,25 @@ fun CalculationScreen(
                         color = Color(0XFF008D9F),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        fontSize = scaledFontSize(32f,30f,28f)
+                        fontSize = scaledFontSize(32f,28f,26f)
                     )
                     IconButton(
-                        modifier = Modifier.weight(0.1f),
+                        modifier = Modifier.weight(0.1f)
+                            .indication(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ),
                         onClick = {
                             navController.navigate(Screen.HISTORY.route + "/" + meters[0].meterId)
                         }
                     ) {
                         Icon(
                             modifier = Modifier
-                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
+                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+                                .indication(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = null
+                                ),
 //                            imageVector = Icons.Default.History,
                             painter = painterResource(id = R.drawable.history), // Help icon
                             contentDescription = "History",
