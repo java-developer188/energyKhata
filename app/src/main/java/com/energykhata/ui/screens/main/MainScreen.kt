@@ -209,7 +209,7 @@ private fun PortraitLayout(
         modifier = Modifier
             .fillMaxSize()
             .padding(start = 20.dp, end = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
         Column(
