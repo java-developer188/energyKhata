@@ -1,5 +1,6 @@
 package com.energykhata.ui.screens.history
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,7 +67,8 @@ fun MeterReadingComponent(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var readingToDelete by remember { mutableStateOf<Reading?>(null) }
     var showMonthYearPicker by remember { mutableStateOf(false) }
-
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp
 
     Column(
         modifier = Modifier
@@ -118,14 +121,28 @@ fun MeterReadingComponent(
                 }
             } else {
                 item {
-                    Text(
-                        text = "No records found.",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color(0XFFB3B2B2),
-                        textAlign = TextAlign.Center,
-                        fontSize = scaledFontSize(22f, 20f, 18f),
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Box(
+                        Modifier.fillParentMaxSize(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+
+                        Image(
+                            painter = painterResource(id = R.drawable.no_record),
+                            contentDescription = "No Record",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(5.dp)
+                        )
+
+                    }
+//                    Text(
+//                        text = "No records found.",
+//                        style = MaterialTheme.typography.titleLarge,
+//                        color = Color(0XFFB3B2B2),
+//                        textAlign = TextAlign.Center,
+//                        fontSize = scaledFontSize(22f, 20f, 18f),
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
                 }
             }
         }

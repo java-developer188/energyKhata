@@ -42,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.energykhata.R
 import com.energykhata.ui.LockScreenOrientation
-import com.energykhata.ui.Screen
 import com.energykhata.util.BannerAd
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
@@ -95,26 +94,26 @@ fun HelpScreen(
                         fontWeight = FontWeight.Bold,
                         fontSize = scaledFontSize(32f,28f,26f)
                     )
-                    IconButton(
-                        modifier = Modifier.weight(0.1f),
-                        onClick = {
-                            navController.navigate(Screen.MAIN.route)
-                            {
-                                popUpTo(Screen.MAIN.route) {
-                                    inclusive = true
-                                } // Clear the back stack
-                            }
-                        },
-
-                        ) {
-                        Icon(
-                            modifier = Modifier
-                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
-                            painter = painterResource(id = R.drawable.home),
-                            contentDescription = "Home",
-                            tint = Color(0XFF008D9F)
-                        )
-                    }
+//                    IconButton(
+//                        modifier = Modifier.weight(0.1f),
+//                        onClick = {
+//                            navController.navigate(Screen.MAIN.route)
+//                            {
+//                                popUpTo(Screen.MAIN.route) {
+//                                    inclusive = true
+//                                } // Clear the back stack
+//                            }
+//                        },
+//
+//                        ) {
+//                        Icon(
+//                            modifier = Modifier
+//                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
+//                            painter = painterResource(id = R.drawable.home),
+//                            contentDescription = "Home",
+//                            tint = Color(0XFF008D9F)
+//                        )
+//                    }
                 }
             }
         ) { paddingValues ->
