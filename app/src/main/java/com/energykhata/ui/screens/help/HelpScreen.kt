@@ -39,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.energykhata.R
 import com.energykhata.ui.LockScreenOrientation
@@ -243,6 +244,7 @@ fun BulletText(text: String, delimiter: String) {
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = scaledFontSize(16f,14f,12f),
                     color = Color.Black,
+                    lineHeight = 22.sp
                 )
             }
         }

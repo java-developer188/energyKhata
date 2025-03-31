@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
             childColumns = arrayOf("meter_id"),
             onDelete = ForeignKey.CASCADE
         )],
-    indices = [Index(value = ["reading"], unique = true)])
+    indices = [Index(value = ["meter_id","reading"], unique = true)])
 data class Reading(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "reading_id")
