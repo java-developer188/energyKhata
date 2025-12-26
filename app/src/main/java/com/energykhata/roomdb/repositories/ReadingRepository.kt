@@ -14,7 +14,9 @@ class ReadingRepository(private val db : EnergyKhataDatabase) {
         db.readingDao().deleteReading(reading)
     }
 
-
+    suspend fun updateReading(reading: Reading) {
+        db.readingDao().updateReading(reading)
+    }
 
     suspend fun getReadingByMeterId(meterId: Long,month:Int , year:Int) : List<Reading> {
         return db.readingDao().getReadingByMeterId(meterId,month,year)

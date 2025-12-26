@@ -54,4 +54,12 @@ class ReadingViewModel(private val meterRepository: MeterRepository, private val
         }
     }
 
+    fun updateReading(updatedReading: Reading, meterId: Long, month: Int, year: Int) {
+        viewModelScope.launch {
+            readingRepository.updateReading(updatedReading)
+            // After update, re-fetch the readings to update the UI
+            getReadings(meterId, month, year)
+        }
+    }
+
 }

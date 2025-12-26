@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.energykhata"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.energykhata"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 3
         versionName = "3.0"
 

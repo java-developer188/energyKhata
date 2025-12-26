@@ -67,6 +67,9 @@ fun MeterReadingComponent(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var readingToDelete by remember { mutableStateOf<Reading?>(null) }
     var showMonthYearPicker by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) } // state for edit dialog
+    var readingToEdit by remember { mutableStateOf<Reading?>(null) } // state for reading to edit
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp
 
@@ -116,6 +119,10 @@ fun MeterReadingComponent(
                         onDeleteClick = {
                             readingToDelete = readings[index]
                             showDeleteDialog = true
+                        },
+                        onEditClick = { reading -> // Handle edit click
+                            readingToEdit = reading
+                            showEditDialog = true
                         }
                     )
                 }
@@ -247,10 +254,131 @@ fun MeterReadingComponent(
             dismissButton = {}
         )
     }
+
+    // Edit Reading Dialog
+    if (showEditDialog && readingToEdit != null) {
+        EditReadingDialog(
+            reading = readingToEdit!!,
+            onDismiss = { showEditDialog = false },
+            onConfirm = { updatedReading ->
+                viewModel.updateReading(
+                    updatedReading,
+                    meter.meterId!!,
+                    selectedMonth,
+                    selectedYear
+                )
+                showEditDialog = false
+            }
+        )
+    }
 }
 
+//@Composable
+//fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(top = 8.dp, bottom = 8.dp)
+//            .clip(RoundedCornerShape(10.dp))
+//            .background(Color(0XFFFDFDFD))
+//            .border(0.2.dp, Color(0XFFB3B2B2), RoundedCornerShape(10.dp))
+//    ) {
+//        Row(
+//            modifier = Modifier.padding(10.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Column(
+//                modifier = Modifier
+//                    .weight(.8f)
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Icon(
+//                        modifier = Modifier
+//                            .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
+//                        painter = painterResource(id = R.drawable.reading),
+//                        contentDescription = "Meter Reading",
+//                        tint = Color(0XFFB3B2B2)
+//                    )
+//                    Spacer(modifier = Modifier.width(8.dp))
+//                    Text(
+//                        text = "${reading.reading}",
+//                        style = MaterialTheme.typography.headlineMedium,
+//                        fontWeight = FontWeight.Bold,
+//                        fontSize = scaledFontSize(28f, 26f, 24f),
+//                        color = Color(0XFF6B6B6B)
+//                    )
+//                }
+//                Spacer(modifier = Modifier.height(8.dp))
+//
+//                // Date and Time
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically
+//                ) {
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Icon(
+//                            modifier = Modifier
+//                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
+//                            painter = painterResource(id = R.drawable.calender),
+//                            contentDescription = "Date",
+//                            tint = Color(0XFFB3B2B2)
+//                        )
+//                        Spacer(modifier = Modifier.width(4.dp))
+//                        Text(
+//                            text = reading.date + ", " + reading.year,
+//                            color = Color(0XFFB3B2B2),
+//                            fontSize = scaledFontSize(13f, 12f, 11f),
+//                        )
+//                    }
+//                    Spacer(modifier = Modifier.width(8.dp))
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        Icon(
+//                            modifier = Modifier
+//                                .size(scaledIconSize(25f, (25f * 0.85f), (25f * 0.75f))),
+//                            painter = painterResource(id = R.drawable.time),
+//                            contentDescription = "Time",
+//                            tint = Color(0XFFB3B2B2)
+//                        )
+//                        Spacer(modifier = Modifier.width(4.dp))
+//                        Text(
+//                            text = reading.time,
+//                            color = Color(0XFFB3B2B2),
+//                            fontSize = scaledFontSize(13f, 12f, 11f),
+//                        )
+//                    }
+//                }
+//            }
+//
+//            Spacer(modifier = Modifier.width(16.dp))
+//
+//            // Delete Icon
+//            Icon(
+//                painter = painterResource(R.drawable.del_red),
+//                contentDescription = "Delete Reading",
+//                tint = Color(0XFFDC3545),
+//                modifier = Modifier
+//                    .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+//                    .clickable(
+//                        indication = null,
+//                        interactionSource = remember { MutableInteractionSource() },
+//                        onClick = { onDeleteClick() })
+//                    .weight(.1f)
+//            )
+//        }
+//    }
+//}
+
 @Composable
-fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
+fun MeterReadingCard(
+    reading: Reading,
+    onDeleteClick: () -> Unit,
+    onEditClick: (Reading) -> Unit // New callback for edit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -332,19 +460,41 @@ fun MeterReadingCard(reading: Reading, onDeleteClick: () -> Unit) {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Delete Icon
-            Icon(
-                painter = painterResource(R.drawable.del_red),
-                contentDescription = "Delete Reading",
-                tint = Color(0XFFDC3545),
-                modifier = Modifier
-                    .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { onDeleteClick() })
-                    .weight(.1f)
-            )
+            // Edit and Delete Icons
+            Row(
+                modifier = Modifier.weight(.2f), // Give more weight to accommodate two icons
+                horizontalArrangement = Arrangement.End, // Align icons to the end
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Edit Icon
+                Icon(
+                    painter = painterResource(R.drawable.edit), // Assuming you have an edit icon
+                    contentDescription = "Edit Reading",
+                    tint = Color(0XFF008D9F), // A color that suits your theme
+                    modifier = Modifier
+                        .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { onEditClick(reading) }
+                        )
+                        .padding(end = 8.dp) // Add some spacing between edit and delete
+                )
+
+                // Delete Icon
+                Icon(
+                    painter = painterResource(R.drawable.del_red),
+                    contentDescription = "Delete Reading",
+                    tint = Color(0XFFDC3545),
+                    modifier = Modifier
+                        .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { onDeleteClick() }
+                        )
+                )
+            }
         }
     }
 }
