@@ -41,8 +41,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.energykhata.BuildConfig
 import com.energykhata.R
 import com.energykhata.ui.LockScreenOrientation
+import com.energykhata.ui.theme.EnergyTeal
 import com.energykhata.util.BannerAd
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
@@ -80,9 +82,9 @@ fun HelpScreen(
                         Icon(
                             modifier = Modifier
                                 .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
-                            painter = painterResource(id = R.drawable.arrow_back), // Help icon
+                            painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "Back",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
 
@@ -90,31 +92,11 @@ fun HelpScreen(
                         modifier = Modifier.weight(0.9f),
                         text = "Help",
                         textAlign = TextAlign.Center,
-                        color = Color(0XFF008D9F),
+                        color = EnergyTeal,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         fontSize = scaledFontSize(32f,28f,26f)
                     )
-//                    IconButton(
-//                        modifier = Modifier.weight(0.1f),
-//                        onClick = {
-//                            navController.navigate(Screen.MAIN.route)
-//                            {
-//                                popUpTo(Screen.MAIN.route) {
-//                                    inclusive = true
-//                                } // Clear the back stack
-//                            }
-//                        },
-//
-//                        ) {
-//                        Icon(
-//                            modifier = Modifier
-//                                .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f))),
-//                            painter = painterResource(id = R.drawable.home),
-//                            contentDescription = "Home",
-//                            tint = Color(0XFF008D9F)
-//                        )
-//                    }
                 }
             }
         ) { paddingValues ->
@@ -135,7 +117,7 @@ fun PortraitLayout() {
         "Add a Meter" to "Tap the Add Meter button to add a new meter._The app assigns a random name, which you can rename anytime._You can add up to 8 meters.",
         "Edit a Meter" to "Long press a meter tile._Tap \"Edit\" from the displayed menu._Edit the meter name in the dialog box (up to 16 characters) and save the changes.",
         "Delete a Meter" to "Long press a meter tile._Select \"Delete\" from the displayed menu._Confirm the action in the dialog box to permanently delete the meter.",
-        "Calculate Units Consumed" to "Tap the meter tile to open the Calculation Screen._For first-time use: Enter the Previous Reading and save it._Enter your Current Reading, ensuring it’s greater than the previous one._Press Calculate to see the units consumed._The current reading is automatically saved to the history.",
+        "Calculate Units Consumed" to "Tap the meter tile to open the Calculation Screen._For first-time use: Enter the Previous Reading and save it._Enter your Current Reading, ensuring it's greater than the previous one._Press Calculate to see the units consumed._The current reading is automatically saved to the history.",
         "Edit Previous Reading" to "Open the Calculation Screen by tapping your meter tile._Tap the Edit button next to the Previous Reading field._Enter the new value (must be smaller than the current reading).",
         "Skip Saving Current Reading" to "By default, every calculated current reading is saved in the history._To prevent saving, toggle off the Save Current Reading switch before calculation.",
         "View Meter History" to "Option 1: Long press the meter tile and select History from the menu._Option 2: Open the Calculation Screen for the desired meter and tap the History icon in the top-right corner._By default, the current month's history is displayed in descending order._To view the history of a specific month, tap the Calendar button at the top and select the desired month._Each record shows the meter reading along with the date and time it was calculated.",
@@ -172,10 +154,7 @@ fun PortraitLayout() {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-//              This commented Ad Unit ID is google testing code
-//              BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
-//              BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
-                BannerAd(adUnitId = "ca-app-pub-8119818222880593/1535065254")
+                BannerAd(adUnitId = BuildConfig.AD_BANNER_ID)
             }
         }
     }
@@ -206,14 +185,14 @@ fun ExpandableHelpItem(title: String, content: String) {
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontSize = scaledFontSize(22f,20f,18f),
-                color = Color(0XFF008D9F),
+                color = EnergyTeal,
                 modifier = Modifier
                     .weight(1f)
             )
             Icon(
                 imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                 contentDescription = if (isExpanded) "Collapse" else "Expand",
-                tint = Color(0XFF008D9F)
+                tint = EnergyTeal
             )
         }
         AnimatedVisibility(visible = isExpanded) {
@@ -224,7 +203,7 @@ fun ExpandableHelpItem(title: String, content: String) {
 
 @Composable
 fun BulletText(text: String, delimiter: String) {
-    var bulletPoints = text.split(delimiter)
+    val bulletPoints = text.split(delimiter)
     Column {
         for (point in bulletPoints) {
             Row(
@@ -250,4 +229,3 @@ fun BulletText(text: String, delimiter: String) {
         }
     }
 }
-

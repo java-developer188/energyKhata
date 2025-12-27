@@ -11,47 +11,83 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class ReadingViewModel(private val meterRepository: MeterRepository, private val readingRepository: ReadingRepository) : ViewModel() {
+class ReadingViewModel(
+    private val meterRepository: MeterRepository,
+    private val readingRepository: ReadingRepository
+) : ViewModel() {
 
-    // MutableStateFlow to hold the list of meters, initially an empty list
     private val _readings = MutableStateFlow<List<Reading>>(emptyList())
-
-    // Exposed as a read-only StateFlow
     val readings: StateFlow<List<Reading>> = _readings
 
-
-    // MutableStateFlow to hold the list of meters, initially an empty list
     private val _meters = MutableStateFlow<List<Meter>>(emptyList())
-
-    // Exposed as a read-only StateFlow
     val meters: StateFlow<List<Meter>> = _meters
 
-    fun getReadings(meterId : Long) {
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+
+    fun getReadings(meterId: Long) {
         viewModelScope.launch {
-            val res = readingRepository.getReadingByMeterId(meterId,Calendar.getInstance().get(Calendar.MONTH),Calendar.getInstance().get(Calendar.YEAR))
-            _readings.value = res
-        }
-    }
-    fun getReadings(meterId : Long , month : Int , year : Int) {
-        viewModelScope.launch {
-            val res = readingRepository.getReadingByMeterId(meterId,month,year)
-            _readings.value = res
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val res = readingRepository.getReadingByMeterId(
+                    meterId,
+                    Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.YEAR)
+                )
+                _readings.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to load readings"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    fun getMeter(meterId : Long) {
+    fun getReadings(meterId: Long, month: Int, year: Int) {
         viewModelScope.launch {
-            val res = meterRepository.getMeter(meterId)
-            _meters.value = res
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val res = readingRepository.getReadingByMeterId(meterId, month, year)
+                _readings.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to load readings"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    fun deleteReading(reading : Reading,meterId : Long , month : Int , year : Int) {
+    fun getMeter(meterId: Long) {
         viewModelScope.launch {
-            readingRepository.deleteReading(reading)
-            val res = readingRepository.getReadingByMeterId(meterId,month,year)
-            _readings.value = res
+            _error.value = null
+            try {
+                val res = meterRepository.getMeter(meterId)
+                _meters.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to load meter"
+            }
         }
     }
 
+    fun deleteReading(reading: Reading, meterId: Long, month: Int, year: Int) {
+        viewModelScope.launch {
+            _error.value = null
+            try {
+                readingRepository.deleteReading(reading)
+                val res = readingRepository.getReadingByMeterId(meterId, month, year)
+                _readings.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to delete reading"
+            }
+        }
+    }
+
+    fun clearError() {
+        _error.value = null
+    }
 }

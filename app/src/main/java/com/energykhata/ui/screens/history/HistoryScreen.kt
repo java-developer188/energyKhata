@@ -39,6 +39,7 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.ui.theme.EnergyTeal
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.ReadingViewModel
@@ -95,17 +96,17 @@ fun HistoryScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ),
-                            painter = painterResource(id = R.drawable.arrow_back), // Help icon
+                            painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "Back",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
 
                     Text(
                         modifier = Modifier.weight(0.9f),
-                        text = if (meters.isNotEmpty()) meters[0].title!! else "",
+                        text = meters.firstOrNull()?.title ?: "",
                         textAlign = TextAlign.Center,
-                        color = Color(0XFF008D9F),
+                        color = EnergyTeal,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         fontSize = scaledFontSize(32f,28f,26f)
@@ -121,7 +122,7 @@ fun HistoryScreen(
                             {
                                 popUpTo(Screen.MAIN.route) {
                                     inclusive = true
-                                } // Clear the back stack
+                                }
                             }
                         },
 
@@ -135,7 +136,7 @@ fun HistoryScreen(
                                 ),
                             painter = painterResource(id = R.drawable.home),
                             contentDescription = "Home",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
                 }
@@ -144,10 +145,10 @@ fun HistoryScreen(
             Box(
                 modifier = Modifier.padding(paddingValues)
             ) {
-                if (meters.isNotEmpty()) {
+                meters.firstOrNull()?.let { meter ->
                     MeterReadingComponent(
                         viewModel = viewModel,
-                        meter = meters[0],
+                        meter = meter,
                         readings = readings
                     )
                 }

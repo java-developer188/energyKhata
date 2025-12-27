@@ -6,10 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.energykhata.roomdb.EnergyKhataDatabase
-import com.energykhata.roomdb.repositories.MeterRepository
-import com.energykhata.roomdb.repositories.ReadingRepository
-import com.energykhata.roomdb.repositories.UserRepository
+import com.energykhata.EnergyKhataApp
 import com.energykhata.ui.screens.calculation.CalculationScreen
 import com.energykhata.ui.screens.help.HelpScreen
 import com.energykhata.ui.screens.history.HistoryScreen
@@ -17,7 +14,7 @@ import com.energykhata.ui.screens.main.MainScreen
 import com.energykhata.ui.screens.splash.SplashScreen
 
 @Composable
-fun RootNavHost(db: EnergyKhataDatabase) {
+fun RootNavHost(app: EnergyKhataApp) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
@@ -31,8 +28,8 @@ fun RootNavHost(db: EnergyKhataDatabase) {
         composable(Screen.MAIN.route) {
             MainScreen(
                 navController,
-                MeterRepository(db),
-                UserRepository(db)
+                app.meterRepository,
+                app.userRepository
             )
         }
         composable(Screen.HELP.route) {
@@ -49,7 +46,7 @@ fun RootNavHost(db: EnergyKhataDatabase) {
         { backstackEntry ->
             CalculationScreen(
                 navController, backstackEntry.arguments?.getLong("meterId"),
-                MeterRepository(db), ReadingRepository(db)
+                app.meterRepository, app.readingRepository
             )
         }
         composable(
@@ -63,7 +60,7 @@ fun RootNavHost(db: EnergyKhataDatabase) {
         { backstackEntry ->
             HistoryScreen(
                 navController, backstackEntry.arguments?.getLong("meterId"),
-                MeterRepository(db), ReadingRepository(db)
+                app.meterRepository, app.readingRepository
             )
         }
     }

@@ -52,12 +52,21 @@ import androidx.compose.ui.unit.em
 import com.energykhata.R
 import com.energykhata.roomdb.models.Meter
 import com.energykhata.roomdb.models.Reading
+import com.energykhata.ui.theme.EnergyDisabled
+import com.energykhata.ui.theme.EnergyDisabledLight
+import com.energykhata.ui.theme.EnergyError
+import com.energykhata.ui.theme.EnergySuccess
+import com.energykhata.ui.theme.EnergyTeal
+import com.energykhata.ui.theme.EnergyYellow
+import com.energykhata.ui.theme.EnergyCream
+import com.energykhata.ui.theme.EnergyBorderLight
 import com.energykhata.ui.theme.ReadingRecorderTheme
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
 import com.energykhata.viewmodels.MeterViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun CalculationComponent(
@@ -65,7 +74,6 @@ fun CalculationComponent(
     meterNumber: Int,
     meter: Meter,
 ) {
-    //<a href="https://www.vecteezy.com/free-vector/meter-reading">Meter Reading Vectors by Vecteezy</a>
     var title by remember { mutableStateOf(meter.title ?: "Meter $meterNumber") }
     var previousReading by remember { mutableLongStateOf(meter.previousReading) }
     var currentReading by remember { mutableLongStateOf(0) }
@@ -137,7 +145,7 @@ fun CalculationComponent(
                     Icon(
                         imageVector = Icons.Default.Done,
                         contentDescription = "Save",
-                        tint = Color(0XFF28A745),
+                        tint = EnergySuccess,
                         modifier = Modifier
                             .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                             .clickable(
@@ -151,7 +159,6 @@ fun CalculationComponent(
                                         isEditing = false
                                         previousReadingError = false
                                         currentReadingError = false
-                                        //save this reading in database
                                         meter.previousReading = previousReading
                                         viewModel.updatePreviousMonthReading(meter)
                                     }
@@ -161,7 +168,7 @@ fun CalculationComponent(
                     Icon(
                         painter = painterResource(R.drawable.edit),
                         contentDescription = "Edit",
-                        tint = Color(0XFF008D9F),
+                        tint = EnergyTeal,
                         modifier = Modifier
                             .size(scaledIconSize(35f, (35f * 0.85f), (35f * 0.75f)))
                             .clickable(indication = null,
@@ -173,24 +180,24 @@ fun CalculationComponent(
                 }
             },
             colors = TextFieldDefaults.colors(
-                cursorColor = Color(0XFF008D9F),
-                focusedIndicatorColor = Color(0XFFFFC107),
-                focusedTextColor = Color(0XFF008D9F),
-                focusedLabelColor = Color(0XFF008D9F),
+                cursorColor = EnergyTeal,
+                focusedIndicatorColor = EnergyYellow,
+                focusedTextColor = EnergyTeal,
+                focusedLabelColor = EnergyTeal,
                 focusedContainerColor = Color.White,
 
-                disabledContainerColor = Color(0XFFE9E9E9),
-                disabledTextColor = Color(0XFFB3B2B2),
-                disabledLabelColor = Color(0XFFB3B2B2),
-                disabledPlaceholderColor = Color(0XFFB3B2B2),
+                disabledContainerColor = EnergyDisabledLight,
+                disabledTextColor = EnergyDisabled,
+                disabledLabelColor = EnergyDisabled,
+                disabledPlaceholderColor = EnergyDisabled,
 
-                unfocusedTextColor = Color(0XFFB3B2B2),
-                unfocusedLabelColor = Color(0XFFB3B2B2),
-                unfocusedIndicatorColor = Color(0XFFBBBABA),
+                unfocusedTextColor = EnergyDisabled,
+                unfocusedLabelColor = EnergyDisabled,
+                unfocusedIndicatorColor = EnergyBorderLight,
                 unfocusedContainerColor = Color.White,
 
-                errorPlaceholderColor = Color(0XFFDC3545),
-                errorIndicatorColor = Color(0XFFDC3545),
+                errorPlaceholderColor = EnergyError,
+                errorIndicatorColor = EnergyError,
             )
         )
         if (previousReadingError) {
@@ -203,7 +210,7 @@ fun CalculationComponent(
                 fontSize = scaledFontSize(12f,11f,10f),
                 text = "The previous reading cannot be greater than the current reading",
 
-                color = Color(0XFFDC3545)
+                color = EnergyError
             )
         }
         Spacer(modifier = Modifier.height(25.dp))
@@ -247,24 +254,24 @@ fun CalculationComponent(
             isError = currentReadingError,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             colors = TextFieldDefaults.colors(
-                cursorColor = Color(0XFF008D9F),
-                focusedIndicatorColor = Color(0XFFFFC107),
-                focusedTextColor = Color(0XFF008D9F),
-                focusedLabelColor = Color(0XFF008D9F),
+                cursorColor = EnergyTeal,
+                focusedIndicatorColor = EnergyYellow,
+                focusedTextColor = EnergyTeal,
+                focusedLabelColor = EnergyTeal,
                 focusedContainerColor = Color.White,
 
-                disabledContainerColor = Color(0XFFE9E9E9),
-                disabledTextColor = Color(0XFFB3B2B2),
-                disabledLabelColor = Color(0XFFB3B2B2),
-                disabledPlaceholderColor = Color(0XFFB3B2B2),
+                disabledContainerColor = EnergyDisabledLight,
+                disabledTextColor = EnergyDisabled,
+                disabledLabelColor = EnergyDisabled,
+                disabledPlaceholderColor = EnergyDisabled,
 
-                unfocusedTextColor = Color(0XFFB3B2B2),
-                unfocusedLabelColor = Color(0XFFB3B2B2),
-                unfocusedIndicatorColor = Color(0XFFBBBABA),
+                unfocusedTextColor = EnergyDisabled,
+                unfocusedLabelColor = EnergyDisabled,
+                unfocusedIndicatorColor = EnergyBorderLight,
                 unfocusedContainerColor = Color.White,
 
-                errorPlaceholderColor = Color(0XFFDC3545),
-                errorIndicatorColor = Color(0XFFDC3545),
+                errorPlaceholderColor = EnergyError,
+                errorIndicatorColor = EnergyError,
             )
         )
         if (currentReadingError) {
@@ -276,7 +283,7 @@ fun CalculationComponent(
                 fontWeight = FontWeight.Normal,
                 fontSize = scaledFontSize(12f,11f,10f),
                 text = "The current reading must be greater than the previous reading",
-                color = Color(0XFFDC3545)
+                color = EnergyError
             )
         }
 
@@ -300,13 +307,10 @@ fun CalculationComponent(
                     .wrapContentHeight()
                     .fillMaxWidth()
                     .background(
-                        if (previousReading > 0 && currentReading > 0) Color(0XFF008D9F) else Color(
-                            0XFFB3B2B2
-                        )
+                        if (previousReading > 0 && currentReading > 0) EnergyTeal else EnergyDisabled
                     )
                     .clickable(enabled = previousReading > 0 && currentReading > 0) {
                         keyboardController?.hide()
-                        // Update the difference when saving the previous reading
                         if (currentReading < previousReading) {
                             currentReadingError = true
                         } else {
@@ -314,19 +318,16 @@ fun CalculationComponent(
                             currentReadingError = false
                             if (isEditing) {
                                 isEditing = false
-                                //When data is correct then save the
                                 meter.previousReading = previousReading
                                 viewModel.updatePreviousMonthReading(meter)
                             }
                             if (isSaveEnabled) {
                                 if (currentReading > 0) {
                                     val instant = Calendar.getInstance()
-                                    val date = instant.time
-                                        .toString()
-                                        .split("GMT")[0]
-                                        .trim()
-                                        .substringBeforeLast(' ')
-                                    val time = SimpleDateFormat("hh:mm a", java.util.Locale.getDefault()).format(instant.time)
+                                    val dateFormat = SimpleDateFormat("MMM dd yyyy", Locale.getDefault())
+                                    val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                                    val date = dateFormat.format(instant.time)
+                                    val time = timeFormat.format(instant.time)
 
                                     viewModel.saveReadingInLogs(
                                         Reading(
@@ -353,7 +354,7 @@ fun CalculationComponent(
                     style = MaterialTheme.typography.headlineSmall,
                     fontSize = scaledFontSize(24f,20f,18f),
                     textAlign = TextAlign.Center,
-                    color = Color(0XFFFFF9E6)
+                    color = EnergyCream
                 )
             }
         }
@@ -371,7 +372,7 @@ fun CalculationComponent(
                     withStyle(
                         style = SpanStyle(
                             fontWeight = FontWeight.Bold,
-                            color = Color(0XFF28A745),
+                            color = EnergySuccess,
                             fontSize = scaledFontSize(45f,40f,35f)
                         )
                     ) {
@@ -380,7 +381,7 @@ fun CalculationComponent(
                     withStyle(
                         style = SpanStyle(
                             fontWeight = FontWeight.Bold,
-                            color = Color(0XFF28A745),
+                            color = EnergySuccess,
                             fontSize = TextUnit(2f, TextUnitType.Em)
                         )
                     ) {

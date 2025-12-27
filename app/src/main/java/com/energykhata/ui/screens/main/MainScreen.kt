@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.energykhata.BuildConfig
 import com.energykhata.R
 import com.energykhata.factory.MainViewModelFactory
 import com.energykhata.roomdb.models.Meter
@@ -73,6 +73,13 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.UserRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.ui.theme.EnergyCream
+import com.energykhata.ui.theme.EnergyError
+import com.energykhata.ui.theme.EnergyTeal
+import com.energykhata.ui.theme.MeterCardBlue1
+import com.energykhata.ui.theme.MeterCardBlue2
+import com.energykhata.ui.theme.MeterCardCyan1
+import com.energykhata.ui.theme.MeterCardCyan2
 import com.energykhata.util.BannerAd
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
@@ -88,12 +95,7 @@ fun MainScreen(
     val context = LocalContext.current
     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
     BackHandler {
-        (context as? Activity)?.finish() //Exit the application
-
-        //just stop the further navigation
-//        if (navController.previousBackStackEntry != null) {
-//            navController.popBackStack() // Navigate back in the stack
-//        }
+        (context as? Activity)?.finish()
     }
     val viewModel: MainViewModel = viewModel(
         factory = MainViewModelFactory(meterRepository, userRepository)
@@ -103,12 +105,8 @@ fun MainScreen(
     var refreshState by remember { mutableIntStateOf(1) }
     var addButtonEnable by remember { mutableStateOf(false) }
 
-    fun deleteMeter(
-        meterSelected: Meter?,
-    ) {
-        viewModel.deleteMeter(meterSelected!!)
-        (meters as ArrayList).remove(meterSelected)
-        refreshState++
+    fun deleteMeter(meterSelected: Meter?) {
+        meterSelected?.let { viewModel.deleteMeter(it) }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -143,9 +141,9 @@ fun MainScreen(
                             text = "Energy Khata",
                             fontWeight = FontWeight.ExtraBold,
                             fontSize = scaledFontSize(45f, 35f, 25f),
-                            color = Color(0XFF008D9F),
-                            style = MaterialTheme.typography.headlineLarge, // Big heading
-                            textAlign = TextAlign.Left // Center the text
+                            color = EnergyTeal,
+                            style = MaterialTheme.typography.headlineLarge,
+                            textAlign = TextAlign.Left
                         )
                     }
                     IconButton(
@@ -164,10 +162,9 @@ fun MainScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ),
-//                            imageVector = Icons.Default.Help, // Help icon
                             painter = painterResource(id = R.drawable.help),
                             contentDescription = "Help",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
                 }
@@ -218,7 +215,6 @@ private fun PortraitLayout(
                 .padding(bottom = 5.dp)
         ) {
             Text(
-//                fontWeight = FontWeight.Normal,
                 fontSize = scaledFontSize(16f, 14f, 12f),
                 modifier = Modifier.scale(1.0f),
                 text = "Easily manage and store readings of your energy meters. Tap the Help button anytime for guidance on using the app.",
@@ -254,7 +250,7 @@ private fun PortraitLayout(
                     modifier = Modifier
                         .wrapContentHeight()
                         .fillMaxWidth()
-                        .background(Color(0XFF008D9F))
+                        .background(EnergyTeal)
                         .clickable { viewModel.addMeter() },
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -262,7 +258,7 @@ private fun PortraitLayout(
                         modifier = Modifier.padding(top = 19.dp),
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add Meter",
-                        tint = Color(0XFFFFF9E6)
+                        tint = EnergyCream
                     )
                     Text(
                         modifier = Modifier.padding(top = 15.dp, bottom = 15.dp),
@@ -270,7 +266,7 @@ private fun PortraitLayout(
                         fontSize = scaledFontSize(24f, 22f, 20f),
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
-                        color = Color(0XFFFFF9E6)
+                        color = EnergyCream
                     )
                 }
             }
@@ -285,11 +281,7 @@ private fun PortraitLayout(
                 .fillMaxSize()
                 .background(Color.Transparent)
         ) {
-            // This commented Ad Unit ID is google testing code
-            // BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
-            //BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
-            BannerAd(adUnitId = "ca-app-pub-8119818222880593/1535065254")
-
+            BannerAd(adUnitId = BuildConfig.AD_BANNER_ID)
         }
     }
 }
@@ -302,20 +294,18 @@ fun MeterGridView(
     onDeleteMeter: (Meter?) -> Unit,
 ) {
 
-    var borderRadiantColors =
+    val borderRadiantColors =
         listOf(
             Brush.radialGradient(
                 colors = listOf(Color(0xFF008798), Color(0xFF00BCD4)),
                 radius = 600f
             ),
         )
-    val iconColorListA =
-        listOf(Color(0xFFE6F2FF), Color(0xFFD4E9FF), Color(0xFFDDFBFF), Color(0xFFCDF9FF))
-    val iconColorListB =
-        listOf(Color(0xFFD4E9FF), Color(0xFFDDFBFF), Color(0xFFCDF9FF), Color(0xFFE6F2FF))
+    val iconColorListA = listOf(MeterCardBlue1, MeterCardBlue2, MeterCardCyan1, MeterCardCyan2)
+    val iconColorListB = listOf(MeterCardBlue2, MeterCardCyan1, MeterCardCyan2, MeterCardBlue1)
     var meterSelected: Meter? by remember { mutableStateOf(null) }
     var showLongPressMenu by remember { mutableStateOf(false) }
-    var isBottomSheetVisible = remember { mutableStateOf(false) }
+    val isBottomSheetVisible = remember { mutableStateOf(false) }
     var editTitle by remember { mutableStateOf(false) }
     var newTitle by remember { mutableStateOf("") }
     var isDeleteMeter by remember { mutableStateOf(false) }
@@ -359,14 +349,8 @@ fun MeterGridView(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.meterboxpattern),
-//                        contentDescription = null,
-//                        contentScale = ContentScale.FillHeight,
-//                        modifier = Modifier.fillMaxSize(),
-//                    )
                     MeterGridItem(
-                        meterName = meters[index].title!!
+                        meterName = meters[index].title ?: "Meter"
                     )
                 }
             }
@@ -375,7 +359,7 @@ fun MeterGridView(
     // Bottom Sheet Composable
     MeterActionBottomSheet(
         isBottomSheetVisible = isBottomSheetVisible,
-        meterTitle = if (meterSelected != null) meterSelected!!.title!! else "",
+        meterTitle = meterSelected?.title ?: "",
         onDismiss = {
             showLongPressMenu = false
             meterSelected = null
@@ -387,14 +371,16 @@ fun MeterGridView(
             showLongPressMenu = false
             editTitle = true
             isDeleteMeter = false
-            newTitle = meterSelected!!.title!!
+            newTitle = meterSelected?.title ?: ""
         },
         onHistory = {
             showLongPressMenu = false
             isDeleteMeter = false
             editTitle = false
             newTitle = ""
-            navController.navigate(Screen.HISTORY.route + "/" + meterSelected!!.meterId)
+            meterSelected?.meterId?.let { meterId ->
+                navController.navigate(Screen.HISTORY.route + "/" + meterId)
+            }
         },
         onDelete = {
             showLongPressMenu = false
@@ -429,7 +415,7 @@ fun MeterGridView(
                                     }),
                             painter = painterResource(id = R.drawable.close),
                             contentDescription = "Cancel",
-                            tint = Color(0XFFDC3545)
+                            tint = EnergyError
 
                         )
                     }
@@ -443,7 +429,7 @@ fun MeterGridView(
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
                             fontSize = scaledFontSize(24f, 22f, 20f),
-                            color = Color(0XFF008D9F)
+                            color = EnergyTeal
                         )
 
                     }
@@ -461,9 +447,9 @@ fun MeterGridView(
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
                             unfocusedContainerColor = Color.Transparent,
-                            cursorColor = Color(0XFF008D9F),
-                            focusedTextColor = Color(0XFF008D9F),
-                            unfocusedTextColor = Color(0XFF008D9F),
+                            cursorColor = EnergyTeal,
+                            focusedTextColor = EnergyTeal,
+                            unfocusedTextColor = EnergyTeal,
                         ),
                         enabled = true,
                         value = newTitle,
@@ -481,10 +467,12 @@ fun MeterGridView(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF008D9F)),
+                    colors = ButtonDefaults.outlinedButtonColors(EnergyTeal),
                     onClick = {
-                        meterSelected?.title = newTitle
-                        viewModel.updateMeter(meterSelected!!)
+                        meterSelected?.let { meter ->
+                            meter.title = newTitle
+                            viewModel.updateMeter(meter)
+                        }
                         meterSelected = null
                         editTitle = false
                     }) {
@@ -526,7 +514,7 @@ fun MeterGridView(
                                     }),
                             painter = painterResource(id = R.drawable.close),
                             contentDescription = "Cancel",
-                            tint = Color(0XFFDC3545)
+                            tint = EnergyError
 
                         )
                     }
@@ -540,7 +528,7 @@ fun MeterGridView(
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
                             fontSize = scaledFontSize(24f, 20f, 18f),
-                            color = Color(0XFF008D9F)
+                            color = EnergyTeal
                         )
                     }
                 }
@@ -551,7 +539,7 @@ fun MeterGridView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "Are you sure you want to delete \"${meterSelected?.title}\" ?",
+                        "Are you sure you want to delete \"${meterSelected?.title ?: ""}\" ?",
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                         fontSize = scaledFontSize(16f, 15f, 14f),
@@ -562,7 +550,7 @@ fun MeterGridView(
                 Button(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(Color(0XFF008D9F)),
+                    colors = ButtonDefaults.outlinedButtonColors(EnergyTeal),
                     onClick = {
                         onDeleteMeter(meterSelected)
                         isDeleteMeter = false
@@ -595,5 +583,4 @@ fun MeterGridScreenPreview() {
         Meter(1, 1, "First Floor ", 1234, 30.0f, true),
 
         )
-    //MeterGridView(meters = sampleMeters, navController = rememberNavController())
 }

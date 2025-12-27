@@ -10,54 +10,89 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val meterRepository: MeterRepository, private val userRepository: UserRepository) : ViewModel() {
+class MainViewModel(
+    private val meterRepository: MeterRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
-    // MutableStateFlow to hold the list of meters, initially an empty list
     private val _meters = MutableStateFlow<List<Meter>>(emptyList())
-
-    // Exposed as a read-only StateFlow
     val meters: StateFlow<List<Meter>> = _meters
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
 
     fun getMeters() {
         viewModelScope.launch {
-            var res = meterRepository.getMeters()
+            _isLoading.value = true
+            _error.value = null
+            try {
+                var res = meterRepository.getMeters()
                 if (res.isEmpty()) {
                     createDefaultUser()
-                    meterRepository.upsertMeter(Meter( 1, 1, "Meter 1", 0, 0.0f, false))
+                    meterRepository.upsertMeter(Meter(1, 1, "Meter 1", 0, 0.0f, false))
                     res = meterRepository.getMeters()
                 }
-            _meters.value = res
+                _meters.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "An error occurred"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-     fun addMeter() {
+    fun addMeter() {
         viewModelScope.launch {
-            val users = userRepository.getUsers()
-            if(users.isNotEmpty()){
+            _error.value = null
+            try {
+                val users = userRepository.getUsers()
+                if (users.isNotEmpty()) {
                     var maxMeterId = meterRepository.getMeters().mapNotNull { it.meterId }.maxOrNull()
-                    if(maxMeterId!= null){
+                    if (maxMeterId != null) {
                         maxMeterId += 1
-                    }else{
+                    } else {
                         maxMeterId = 1
                     }
-                    meterRepository.upsertMeter(Meter(maxMeterId, users[0].userId, "Meter $maxMeterId", 0, 0.0f, false))
+                    meterRepository.upsertMeter(
+                        Meter(maxMeterId, users[0].userId, "Meter $maxMeterId", 0, 0.0f, false)
+                    )
                 }
-            _meters.value = meterRepository.getMeters()
+                _meters.value = meterRepository.getMeters()
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to add meter"
+            }
         }
     }
 
     fun updateMeter(meter: Meter) {
         viewModelScope.launch {
-            meterRepository.upsertMeter(meter)
-            _meters.value = meterRepository.getMeters()
+            _error.value = null
+            try {
+                meterRepository.upsertMeter(meter)
+                _meters.value = meterRepository.getMeters()
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to update meter"
+            }
         }
     }
 
     fun deleteMeter(meter: Meter) {
         viewModelScope.launch {
-            meterRepository.deleteMeter(meter)
-            _meters.value = meterRepository.getMeters()
+            _error.value = null
+            try {
+                meterRepository.deleteMeter(meter)
+                _meters.value = meterRepository.getMeters()
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to delete meter"
+            }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 
     private suspend fun createDefaultUser() {

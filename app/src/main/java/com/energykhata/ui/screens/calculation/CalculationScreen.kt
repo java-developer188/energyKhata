@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.energykhata.BuildConfig
 import com.energykhata.R
 import com.energykhata.factory.MeterViewModelFactory
 import com.energykhata.roomdb.models.Meter
@@ -44,6 +45,7 @@ import com.energykhata.roomdb.repositories.MeterRepository
 import com.energykhata.roomdb.repositories.ReadingRepository
 import com.energykhata.ui.LockScreenOrientation
 import com.energykhata.ui.Screen
+import com.energykhata.ui.theme.EnergyTeal
 import com.energykhata.util.BannerAd
 import com.energykhata.util.scaledFontSize
 import com.energykhata.util.scaledIconSize
@@ -100,17 +102,17 @@ fun CalculationScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ),
-                            painter = painterResource(id = R.drawable.arrow_back), // Help icon
+                            painter = painterResource(id = R.drawable.arrow_back),
                             contentDescription = "Back",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
 
                     Text(
                         modifier = Modifier.weight(0.9f),
-                        text = if (meters.isNotEmpty()) meters[0].title!! else "",
+                        text = meters.firstOrNull()?.title ?: "",
                         textAlign = TextAlign.Center,
-                        color = Color(0XFF008D9F),
+                        color = EnergyTeal,
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
                         fontSize = scaledFontSize(32f,28f,26f)
@@ -122,7 +124,9 @@ fun CalculationScreen(
                                 indication = null
                             ),
                         onClick = {
-                            navController.navigate(Screen.HISTORY.route + "/" + meters[0].meterId)
+                            meters.firstOrNull()?.meterId?.let { id ->
+                                navController.navigate(Screen.HISTORY.route + "/" + id)
+                            }
                         }
                     ) {
                         Icon(
@@ -132,10 +136,9 @@ fun CalculationScreen(
                                     interactionSource = remember { MutableInteractionSource() },
                                     indication = null
                                 ),
-//                            imageVector = Icons.Default.History,
-                            painter = painterResource(id = R.drawable.history), // Help icon
+                            painter = painterResource(id = R.drawable.history),
                             contentDescription = "History",
-                            tint = Color(0XFF008D9F)
+                            tint = EnergyTeal
                         )
                     }
                 }
@@ -190,10 +193,7 @@ private fun PortraitLayout(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                // This commented Ad Unit ID is google testing code
-                // BannerAd(adUnitId = "ca-app-pub-3940256099942544/9214589741")
-//                BannerAd(adUnitId = "ca-app-pub-7592034253054302/2550847616")
-                BannerAd(adUnitId = "ca-app-pub-8119818222880593/1535065254")
+                BannerAd(adUnitId = BuildConfig.AD_BANNER_ID)
             }
         }
     }

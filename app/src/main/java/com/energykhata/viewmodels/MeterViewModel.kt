@@ -10,29 +10,58 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MeterViewModel(private val meterRepository: MeterRepository , private val readingRepository: ReadingRepository) : ViewModel() {
+class MeterViewModel(
+    private val meterRepository: MeterRepository,
+    private val readingRepository: ReadingRepository
+) : ViewModel() {
 
-    // MutableStateFlow to hold the list of meters, initially an empty list
     private val _meters = MutableStateFlow<List<Meter>>(emptyList())
-
-    // Exposed as a read-only StateFlow
     val meters: StateFlow<List<Meter>> = _meters
-    fun getMeter(id : Long) {
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error
+
+    fun getMeter(id: Long) {
         viewModelScope.launch {
-            val res = meterRepository.getMeter(id)
-            _meters.value = res
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val res = meterRepository.getMeter(id)
+                _meters.value = res
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to load meter"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
-    fun updatePreviousMonthReading(meter: Meter){
+    fun updatePreviousMonthReading(meter: Meter) {
         viewModelScope.launch {
-             meterRepository.upsertMeter(meter)
+            _error.value = null
+            try {
+                meterRepository.upsertMeter(meter)
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to update reading"
+            }
         }
     }
 
-    fun saveReadingInLogs(reading: Reading){
+    fun saveReadingInLogs(reading: Reading) {
         viewModelScope.launch {
-            readingRepository.insertReading(reading)
+            _error.value = null
+            try {
+                readingRepository.insertReading(reading)
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to save reading"
+            }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }

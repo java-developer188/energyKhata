@@ -22,9 +22,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            // Test ad unit ID for debug builds
+            buildConfigField("String", "AD_BANNER_ID", "\"ca-app-pub-3940256099942544/9214589741\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Production ad unit ID for release builds
+            buildConfigField("String", "AD_BANNER_ID", "\"ca-app-pub-8119818222880593/1535065254\"")
         }
     }
     compileOptions {
@@ -36,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.11"
